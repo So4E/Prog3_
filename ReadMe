@@ -1,0 +1,88 @@
+komplette Geschäftslogik implementiert (für AudioVideo). Gelöst ohne abstrakte Klasse -> okay?
+-> Testabdeckung ungenügend, richtig?
+
+Abgabe Übung 3:
+
+Simulation 1 ist realisiert -> Name, Größe variieren
+
+
+
+Abgabe Übung 2: Anmerkungen:
+
+Bei SetUp in Main soll der User zuerst die Größe der Datenbank (capacity),
+    dann vermeintlich TCP oder UDP angeben
+
+Anlegen neuer audiovideo oder audio datei ist möglich über Console - Beispiel:
+
+wähle:
+:c
+lege Produzenten an:
+Otto
+lege neue audiovideo an:
+audiovideo Otto , 20 20 20 20
+
+Beobachter für 90% der Kapazität ist angelegt.
+
+Zweiter Beobachter für Tags ist noch anzulegen.
+
+
+
+
+
+
+
+
+
+
+
+
+Softwareanforderung (erfüllt):
+- Java8 language level
+- JUnit 5 und Mockito als Testframeworks
+
+Bewertungsschema (erfüllt):
+• zip Archiv
+• IntelliJ-Projekt (kein Gradle, Maven o.ä.)
+• kompilierbar und ausführbar
+• Trennung zwischen Test- und Produktiv-Code
+
+check:
+• main-Methoden nur im default package (wo ist das default package?)
+
+
+Uebung 2 -------------------------------------
+
+1 Punkt (zusätzlich zu Bewertungsschema zu erfüllen:)
+• Darstellungslogik und Geschäftslogik getrennt
+• prototypisches EventSystem.infastructureOLDEVENTS (nicht notwendig, wenn umfangreicheres EventSystem.infastructureOLDEVENTS realisiert
+ist)
+
+empfohlene Realisierungen als Vorbereitung auf den Beleg
+1. event-System realisiert
+2. Beobachter realisiert
+3. Auflistender Mediadateien im EventSystem.infastructureOLDEVENTS realisiert
+4. zwei Tests für Beobachter realisiert
+5. zwei listener getestet
+6. angemessene Aufzählungstypen verwendet
+7. nach MVC strukturiert
+8. vollständiger Befehlssatz
+
+
+
+
+Uebung 1
+
+1 Punkt ----------> erfüllt
+• CRUD für Mediadateien
+• mindestens ein Test
+
+empfohlene Realisierungen als Vorbereitung auf den Beleg (nicht eingerückt = Todo)
+    1. Trennung zwischen Test- und Produktiv-Code
+    2. JUnit5 als Testframework
+    3. Mockito als Mock/Spy-framework
+    4. mindestens je ein Test für CRUD
+5. mindestens zwei Tests mit Mockito
+6. Einfügen der Mediadateien vollständig getestet (mindestens 8 Testfälle)
+    7. Unterstützung von mindestens zwei Typen von Mediadateien
+8. vollständige GL
+9. keine Code-Duplikate
