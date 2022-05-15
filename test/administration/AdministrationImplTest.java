@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 class AdministrationImplTest {
     Collection<Tag> collection = new LinkedList<>();
 
-    //initializing Administration
+    //initialization of administration --------------------------------
     @Test
     void initialiseAdministrationWithSizeSmallerThanZero() {
         assertThrows(InvalidParameterException.class, () -> {
@@ -25,43 +25,111 @@ class AdministrationImplTest {
 
     //producer tests ------------------------------------------------------------------------
     @Test
-    void addingFirstProducer(){
+    void addingFirstProducer() {
         Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
-        boolean actual = testAdmin.addProducer("JZ");
         boolean expected = true;
+        boolean actual = testAdmin.addProducer("JZ");
         assertEquals(expected, actual);
     }
 
     @Test
-    void tryToAddProducerTwice(){
+    void tryToAddProducerTwice() {
         Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
         testAdmin.addProducer("JZ");
 
         //try to add same producer (this is case sensitive)
-        boolean actual = testAdmin.addProducer("JZ");
         boolean expected = false;
+        boolean actual = testAdmin.addProducer("JZ");
 
         assertEquals(expected, actual);
     }
 
-    //TODO Test to check if producer is also on Hashmap
-    /*@Test
-    void checkIfProducerIsAlsoOnMap(){
+    @Test
+    void nameSavedCorrectly() {
         Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
-        testAdmin.addProducer("JZ");
-        int itemsOnMap = testAdmin.get ->>>>>> getter noch definieren in AdminImpl
+        testAdmin.addProducer("Horst");
+
+        //check if name is listed in producer list
         boolean expected = true;
+        boolean actual = testAdmin.checkIfProducerIsListed("Horst");
+
         assertEquals(expected, actual);
-    }*/
+    }
+
+    @Test
+    void checkIfProducerIsAlsoOnMapForCounts() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        testAdmin.addProducer("Horst");
+        int expected = 0;
+        int actualMediaCount = testAdmin.listProducerWithMediaCount().get("Horst");
+        assertEquals(expected, actualMediaCount);
+    }
+
+    @Test
+    void checkIfProducerCountsAreAdjustedWhenMediaFilesAreBeingAddedAndDeleted() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        testAdmin.addProducer("Horst");
+
+        testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+        testAdmin.deleteMedia(testAdmin.listMedia().get(1).getAddress());
+        testAdmin.addMedia("Audio", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+
+        int expected = 3;
+        int actualMediaCount = testAdmin.listProducerWithMediaCount().get("Horst");
+        assertEquals(expected, actualMediaCount);
+    }
+
+    @Test
+    void checkWhetherReturnOfSearchForDeletedProducerIsCorrect() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        testAdmin.addProducer("Horst");
+        testAdmin.addProducer("Hildegard");
+        testAdmin.addProducer("BABA");
+
+        testAdmin.deleteProducer("Horst");
+        int expected = -1;
+        int indexDefaultReturn = testAdmin.getIndexOfProducer("Horst");
+        assertEquals(expected, indexDefaultReturn);
+    }
+
+    @Test
+    void checkWhetherReturnOfCounterMapSearchForDeletedProducerIsCorrect() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        testAdmin.addProducer("Horst");
+        testAdmin.addProducer("Hildegard");
+        testAdmin.addProducer("BABA");
+
+        testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+        testAdmin.deleteMedia(testAdmin.listMedia().get(1).getAddress());
+
+        testAdmin.deleteProducer("Horst");
+
+        Object expected = null;
+        Object actual = testAdmin.listProducerWithMediaCount().get("Horst");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void tryToDeleteProducerThatDoesntExist() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+
+        boolean expected = false;
+        boolean actual = testAdmin.deleteProducer("Horst");
+
+        assertEquals(expected, actual);
+    }
 
     //mediafiles tests ---------------------------------------------------------------
     @Test
-    void noMediaOnListWithoutAddingAnything() {
+    void nothingOnMediaListWithoutAddingAnything() {
         Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
         testAdmin.addProducer("jz");
 
-        int actual = testAdmin.listMedia().size();
         int expected = 0;
+        int actual = testAdmin.listMedia().size();
         assertEquals(expected, actual);
     }
 
@@ -70,9 +138,9 @@ class AdministrationImplTest {
         Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
         testAdmin.addProducer("JZ");
         collection.add(Tutorial);
+        boolean expected = true;
         boolean actual = testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(10),
                 Duration.ofMinutes(5), "139 108");
-        boolean expected = true;
         assertEquals(expected, actual);
     }
 
@@ -84,16 +152,25 @@ class AdministrationImplTest {
         testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(10),
                 Duration.ofMinutes(5), "139 108");
 
-        int actual = testAdmin.listMedia().size();
         int expected = 1;
+        int actual = testAdmin.listMedia().size();
         assertEquals(expected, actual);
     }
 
-    //to check that no Exception comes back
     @Test
     void listMediaWithNoObjectsOnList() {
         Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
-        testAdmin.listMedia();
+        int expected = 0;
+        int actualSize = testAdmin.listMedia().size();
+        assertEquals(expected, actualSize);
+    }
+
+    @Test
+    void getMediaWithNoObjectsOnMediaList() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            testAdmin.listMedia().get(3);
+        });
     }
 
     @Test
@@ -114,9 +191,9 @@ class AdministrationImplTest {
                 Duration.ofMinutes(5), "139 108");
 
         //storage full -> next media cannot be added:
+        boolean expected = false;
         boolean actual = testAdmin.addMedia("AudioVideo", "Anna Schmidt", collection, BigDecimal.valueOf(10),
                 Duration.ofMinutes(5), "139 108");
-        boolean expected = false;
 
         assertEquals(expected, actual);
     }
@@ -132,8 +209,8 @@ class AdministrationImplTest {
 
         testAdmin.changeMedia(testAdmin.listMedia().get(0).getAddress());
 
-        long actual = testAdmin.listMedia().get(0).getAccessCount();
         long expected = 1;
+        long actual = testAdmin.listMedia().get(0).getAccessCount();
         assertEquals(expected, actual);
     }
 
@@ -149,8 +226,8 @@ class AdministrationImplTest {
         AudioVideoImpl content = (AudioVideoImpl) testAdmin.listMedia().get(0);
         content.increaseAccessCount();
 
-        long actual = testAdmin.listMedia().get(0).getAccessCount();
         long expected = 1;
+        long actual = testAdmin.listMedia().get(0).getAccessCount();
         assertEquals(expected, actual);
     }
 
@@ -166,8 +243,8 @@ class AdministrationImplTest {
         String address = testAdmin.listMedia().get(0).getAddress();
         testAdmin.changeMedia(address);
 
-        long actual = testAdmin.listMedia().get(0).getAccessCount();
         long expected = 1;
+        long actual = testAdmin.listMedia().get(0).getAccessCount();
         assertEquals(expected, actual);
     }
 
@@ -192,8 +269,8 @@ class AdministrationImplTest {
 
         testAdmin.deleteMedia(testAdmin.listMedia().getFirst().getAddress());
 
-        int actual = testAdmin.listMedia().size();
         int expected = 3;
+        int actual = testAdmin.listMedia().size();
         assertEquals(expected, actual);
     }
 
@@ -213,8 +290,8 @@ class AdministrationImplTest {
         testAdmin.addMedia("AudioVideo", "Heinz Horst", collection, BigDecimal.valueOf(10),
                 Duration.ofMinutes(5), "139 108");
 
-        boolean actual = testAdmin.deleteMedia(testAdmin.listMedia().getLast().getAddress());
         boolean expected = true;
+        boolean actual = testAdmin.deleteMedia(testAdmin.listMedia().getLast().getAddress());
         assertEquals(expected, actual);
     }
 
@@ -241,8 +318,8 @@ class AdministrationImplTest {
         assertTrue(returnWhenDeleted);
 
         //check that also list is reduced by one item
-        int actual = testAdmin.listMedia().size();
         int expected = 3;
+        int actual = testAdmin.listMedia().size();
         assertEquals(expected, actual);
     }
 
@@ -265,12 +342,38 @@ class AdministrationImplTest {
         String address = testAdmin.listMedia().get(2).getAddress();
         testAdmin.deleteMedia(address);
 
-        boolean actual = testAdmin.deleteMedia(address);
         boolean expected = false;
+        boolean actual = testAdmin.deleteMedia(address);
         assertEquals(expected, actual);
     }
-}
 
+
+    @Test
+    void getMediaFromSpecialMediaType() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        collection.add(Tutorial);
+
+        testAdmin.addProducer("JZ");
+        testAdmin.addProducer("Heinz Horst");
+
+        testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("Audio", "jz", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("LicensedAudio", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("InteractiveVideo", "Ursula", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("AudioVideo", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+
+        int expected = 2;
+        int actualHowManyAudioVideo = testAdmin.listMedia("AuDIoVideo").size();
+
+        assertEquals(expected,actualHowManyAudioVideo);
+    }
+
+}
     /* -------------------- MOCKITO TUT NICHT -----------> in Übung fragen
     "org.mockito.exceptions.base.MockitoException:
 Mockito cannot mock this class: class administration.AdministrationImpl."

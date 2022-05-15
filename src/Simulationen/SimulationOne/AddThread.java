@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static mediaDB.Tag.*;
 
-public class AddThread extends Thread{
+public class AddThread extends Thread {
     Collection<Tag> tags = new LinkedList<>();
     ArrayList<String> names = new ArrayList<>();
 
@@ -21,7 +21,7 @@ public class AddThread extends Thread{
     Administration admin;
 
 
-    public AddThread (Administration administration){
+    public AddThread(Administration administration) {
         this.admin = administration;
     }
 
@@ -37,18 +37,17 @@ public class AddThread extends Thread{
         names.add("Renate");
 
 
-
         do {
             this.randomNumber = ThreadLocalRandom.current().nextInt(2, 5);
             this.listNumber = ThreadLocalRandom.current().nextInt(0, 3);
             admin.addMedia("audiovideo", names.get(listNumber), tags, BigDecimal.valueOf(randomNumber),
                     Duration.ofMinutes(randomNumber), "139 108");
-            System.out.println(this.getName() + ": " + this.toString() +": Tried to add new Media");
-        }while (true);
+            System.out.println(this.getName() + ": " + this.toString() + ": Tried to add new Media");
+        } while (true);
     }
 
     @Override
-    public String toString (){
+    public String toString() {
         return "AddThread";
     }
 }

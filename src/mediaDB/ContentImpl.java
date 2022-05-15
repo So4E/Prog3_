@@ -22,4 +22,9 @@ public class ContentImpl implements Content {
         return this.accessCount;
     }
 
+    public boolean increaseAccessCount(){
+        this.accessCount = accessCount + 1;
+        return true;
+    }
+
 }

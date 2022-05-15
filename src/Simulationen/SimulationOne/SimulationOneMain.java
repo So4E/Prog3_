@@ -42,13 +42,13 @@ public class SimulationOneMain {
             String input = s.next();
             try {
                 capacity = Integer.parseInt(input);
-            } catch (NumberFormatException n){
+            } catch (NumberFormatException n) {
                 System.out.println("No correct input. Please try again to enter a number bigger or equal to 0.");
             }
-        }while (capacity == -1);
+        } while (capacity == -1);
 
         //create admin and prepare for thread test
-        Administration newAdmin = new AdministrationImpl(BigDecimal.valueOf(capacity));
+        AdministrationImpl newAdmin = new AdministrationImpl(BigDecimal.valueOf(capacity));
         newAdmin.addProducer("Otto");
         newAdmin.addProducer("Tina");
         newAdmin.addProducer("Bradley Cooper");
@@ -60,10 +60,9 @@ public class SimulationOneMain {
         simulationOneThreads.add(adding);
         simulationOneThreads.add(deleting);
 
-        Observer sizeObserver = new SizeObserver((AdministrationImpl) newAdmin);
-        Observer tagObserver = new TagObserver((AdministrationImpl) newAdmin);
-        Observer addOrDeleteObserver = new AddOrDeleteObserverImpl((AdministrationImpl) newAdmin);
-
+        Observer sizeObserver = new SizeObserver(newAdmin);
+        Observer tagObserver = new TagObserver(newAdmin);
+        Observer addOrDeleteObserver = new AddOrDeleteObserverImpl(newAdmin);
 
         deleting.start();
         adding.start();

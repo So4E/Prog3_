@@ -1,12 +1,25 @@
-komplette Geschäftslogik implementiert (für AudioVideo). Gelöst ohne abstrakte Klasse -> okay?
--> Testabdeckung ungenügend, richtig?
+Allgemeine Fragen:
+komplette Geschäftslogik implementiert (bis auf optionaleParameter aufsplitten und default Werte vergeben).
+-> Gelöst ohne abstrakte Klasse -> okay? oder zu viel Dopplung?
+-> Testabdeckung ausreichend?
+
+- UE 2 wg sys.out.printl nicht bestanden
+-> nun entfernt und über beobachter realisiert -> OKAY so?
 
 Abgabe Übung 3:
-
 Simulation 1 ist realisiert -> Name, Größe variieren
 
+Simulation 2:
+- increase Thread angelegt
+- increase observer -> passt? oder muss genauer abgeglichen werden ob an den access counts etwas
+                    geändert wurde?
+
+- modified delete thread -> darf dieser und noch zu implementierender ModifiedAddThread je auch das
+    interface Observer implementieren, sodass sich beide gegenseitig benachrichtigen, wenn sie fertig sind?
 
 
+
+__________________ALTE ANMERKUNGEN
 Abgabe Übung 2: Anmerkungen:
 
 Bei SetUp in Main soll der User zuerst die Größe der Datenbank (capacity),

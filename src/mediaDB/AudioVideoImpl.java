@@ -2,10 +2,8 @@ package mediaDB;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
 
 //my prototype of MediaFile -> if something essential changes here - change in other classes as well
 public class AudioVideoImpl implements AudioVideo {
@@ -48,28 +46,20 @@ public class AudioVideoImpl implements AudioVideo {
         return true;
     }
 
-    //handy für Zuordung der Mediatypen
     @Override
-    public String toString (){
+    public String toString() {
         return mediaType.toLowerCase();
     }
 
-    //gegebene Methoden aus Interfaces -------
     @Override
-    public int getSamplingRate() {
-        return this.samplingRate;
+    public Uploader getUploader() {
+        return this.uploader;
     }
 
     @Override
-    public String getAddress() {
-        return this.address;
+    public Collection<Tag> getTags() {
+        return this.tagCollection;
     }
-
-    @Override
-    public Collection<Tag> getTags() { return this.tagCollection; }
-
-    @Override
-    public long getAccessCount() { return this.accessCount; }
 
     @Override
     public BigDecimal getBitrate() {
@@ -87,18 +77,28 @@ public class AudioVideoImpl implements AudioVideo {
     }
 
     @Override
-    public Uploader getUploader() {
-        return this.uploader;
+    public String getAddress() {
+        return this.address;
     }
 
     @Override
     public Date getUploadDate() {
-        return uploadDate;
+        return this.uploadDate;
+    }
+
+    @Override
+    public long getAccessCount() {
+        return this.accessCount;
+    }
+
+    @Override
+    public int getSamplingRate() {
+        return this.samplingRate;
     }
 
     @Override
     public int getResolution() {
-        return resolution;
+        return this.resolution;
     }
 
 }

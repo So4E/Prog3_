@@ -4,7 +4,6 @@ import EventSystem.Observer.Observer;
 import EventSystem.Observer.SubjectForSizeObserver;
 import mediaDB.*;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.time.Duration;
@@ -155,20 +154,34 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
                 newItem = new AudioVideoImpl(mediaType, producer, tags, bitrate, length,
                         optionaleParameter, size, address, uploadDate);
                 break;
-
             case Audio:
                 newItem = new AudioImpl(mediaType, producer, tags, bitrate, length,
                         optionaleParameter, size, address, uploadDate);
                 break;
-
-            //TODO hier alle Formate einfügen, aber:
-            // ---> only Mediafiles that extend Uploadable and MediaContent can be added to list
-            //TODO: default parameter übergeben für optionale Parameter, falls keine Auswahl
-
+            case Video:
+                newItem = new VideoImpl(mediaType, producer, tags, bitrate, length,
+                        optionaleParameter, size, address, uploadDate);
+                break;
+            case InteractiveVideo:
+                newItem = new InteractiveVideoImpl(mediaType, producer, tags, bitrate, length,
+                        optionaleParameter, size, address, uploadDate);
+                break;
+            case LicencedAudio:
+                newItem = new LicensedAudioImpl(mediaType, producer, tags, bitrate, length,
+                        optionaleParameter, size, address, uploadDate);
+                break;
+            case LicencedVideo:
+                newItem = new LicensedVideoImpl(mediaType, producer, tags, bitrate, length,
+                        optionaleParameter, size, address, uploadDate);
+                break;
+            case LicencedAudioVideo:
+                newItem = new LicensedAudioVideoImpl(mediaType, producer, tags, bitrate, length,
+                        optionaleParameter, size, address, uploadDate);
+                break;
             default:
-                //TO DO - Exception werfen?
                 return false;
         }
+
         mediaList.add(newItem);                  //add new item
         totalSize = totalSize.add(size);         //add its size to total size
         //add plus one in tagMap for used Tags
@@ -181,8 +194,7 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
             }
         }
 
-
-        benachrichtige();                       //tell SizeObserver that there was a change
+        benachrichtige();                       //tell SizeObserver that there were changes made
         int oldCounter = uploaderMap.get(nameOfProducer); // get producer counter
         uploaderMap.put(nameOfProducer, oldCounter + 1); // increase and save
 
@@ -227,15 +239,36 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
                 case AudioVideo:
                     AudioVideoImpl file = (AudioVideoImpl) mediaList.get(index);
                     file.increaseAccessCount();
+                    break;
+                case Audio:
+                    AudioImpl file2 = (AudioImpl) mediaList.get(index);
+                    file2.increaseAccessCount();
+                    break;
+                case Video:
+                    VideoImpl file3 = (VideoImpl) mediaList.get(index);
+                    file3.increaseAccessCount();
                     benachrichtige();
                     break;
-
-                //TODO hier alle mediafiles einfügen
-
+                case InteractiveVideo:
+                    InteractiveVideoImpl file4 = (InteractiveVideoImpl) mediaList.get(index);
+                    file4.increaseAccessCount();
+                    break;
+                case LicencedAudio:
+                    LicensedAudioImpl file5 = (LicensedAudioImpl) mediaList.get(index);
+                    file5.increaseAccessCount();
+                    break;
+                case LicencedVideo:
+                    LicensedVideoImpl file6 = (LicensedVideoImpl) mediaList.get(index);
+                    file6.increaseAccessCount();
+                    break;
+                case LicencedAudioVideo:
+                    LicensedAudioVideoImpl file7 = (LicensedAudioVideoImpl) mediaList.get(index);
+                    file7.increaseAccessCount();
+                    break;
                 default:
                     return false;
-
             }
+            benachrichtige();
             return true;
         }
         return false;
