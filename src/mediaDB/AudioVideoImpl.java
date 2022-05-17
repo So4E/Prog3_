@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 
 //my prototype of MediaFile -> if something essential changes here - change in other classes as well
-public class AudioVideoImpl implements AudioVideo {
+public class AudioVideoImpl  extends AbstractUploadable implements AudioVideo {
     //members sorted by constructor, which is sorted by user input
     String mediaType;
     Uploader uploader; // = producer
@@ -39,11 +39,6 @@ public class AudioVideoImpl implements AudioVideo {
         this.resolution = Integer.parseInt(parameter[0]);
         this.samplingRate = Integer.parseInt(parameter[1]);
 
-    }
-
-    public boolean increaseAccessCount() {
-        this.accessCount = accessCount + 1;
-        return true;
     }
 
     @Override

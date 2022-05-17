@@ -1,12 +1,19 @@
-Allgemeine Fragen:
+Checkliste:
+
+zusätzlich erfüllte Anforderungen:
+- [ ] keine Verwendung von Thread.sleep o.Ä. bzw. nur mit 0-Werten
+- [ ] ändernde Aktionen der threads produzieren Ausgaben auf der Konsole
+- [ ] Änderungen an der Geschäftslogik produzieren Ausgaben auf der Konsole
+
+#Allgemeine Fragen:
 komplette Geschäftslogik implementiert (bis auf optionaleParameter aufsplitten und default Werte vergeben).
--> Gelöst ohne abstrakte Klasse -> okay? oder zu viel Dopplung?
 -> Testabdeckung ausreichend?
 
 - UE 2 wg sys.out.printl nicht bestanden
 -> nun entfernt und über beobachter realisiert -> OKAY so?
 
-Abgabe Übung 3:
+#Abgabe Übung 3:
+
 Simulation 1 ist realisiert -> Name, Größe variieren
 
 Simulation 2:

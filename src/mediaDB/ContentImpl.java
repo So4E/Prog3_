@@ -2,7 +2,7 @@ package mediaDB;
 
 import java.util.Collection;
 
-public class ContentImpl implements Content {
+public class ContentImpl  extends AbstractUploadable implements Content {
     long accessCount;
     String address;
     Collection<Tag> tagCollection;
@@ -20,11 +20,6 @@ public class ContentImpl implements Content {
     @Override
     public long getAccessCount() {
         return this.accessCount;
-    }
-
-    public boolean increaseAccessCount(){
-        this.accessCount = accessCount + 1;
-        return true;
     }
 
 }

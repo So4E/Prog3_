@@ -2,11 +2,10 @@ package mediaDB;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
-public class AudioImpl implements Audio {
+public class AudioImpl extends AbstractUploadable implements Audio {
     String mediaType;
     Uploader uploader;
     Collection<Tag> tagCollection;
@@ -44,11 +43,6 @@ public class AudioImpl implements Audio {
             //default value
             this.samplingRate = 800;
         }
-    }
-
-    public boolean increaseAccessCount() {
-        this.accessCount = accessCount + 1;
-        return true;
     }
 
     @Override
