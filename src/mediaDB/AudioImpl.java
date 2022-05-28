@@ -14,7 +14,6 @@ public class AudioImpl extends AbstractUploadable implements Audio {
     BigDecimal size;
     String address;
     Date uploadDate;
-    public long accessCount;
     //optionale Parameter
     int samplingRate;
 

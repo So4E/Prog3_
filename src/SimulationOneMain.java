@@ -1,10 +1,9 @@
-package Simulationen.SimulationOne;
-
 import EventSystem.Observer.Observer;
 import EventSystem.Observer.SizeObserver;
 import EventSystem.Observer.TagObserver;
 import Simulationen.SimObserver.AddOrDeleteObserverImpl;
-import administration.Administration;
+import Simulationen.SimulationOne.AddThread;
+import Simulationen.SimulationOne.DeleteThread;
 import administration.AdministrationImpl;
 
 import java.math.BigDecimal;

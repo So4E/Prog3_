@@ -1,19 +1,19 @@
 package administration;
 
-import mediaDB.*;
+import mediaDB.AudioVideoImpl;
+import mediaDB.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.time.Duration;
-import java.util.*;
+import java.util.LinkedList;
 
 import static mediaDB.Tag.Tutorial;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 class AdministrationImplTest {
-    Collection<Tag> collection = new LinkedList<>();
+    LinkedList<Tag> collection = new LinkedList<>();
 
     //initialization of administration --------------------------------
     @Test

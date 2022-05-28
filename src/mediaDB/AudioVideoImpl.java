@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 
 //my prototype of MediaFile -> if something essential changes here - change in other classes as well
-public class AudioVideoImpl  extends AbstractUploadable implements AudioVideo {
+public class AudioVideoImpl extends AbstractUploadable implements AudioVideo {
     //members sorted by constructor, which is sorted by user input
     String mediaType;
     Uploader uploader; // = producer
@@ -16,7 +16,6 @@ public class AudioVideoImpl  extends AbstractUploadable implements AudioVideo {
     BigDecimal size; //besser in Objekten selbst bei unterschiedlicher formel berechnen? access nicht gegeben
     String address;
     Date uploadDate;
-    public long accessCount;
     //optionale Parameter:
     int resolution;
     int samplingRate;

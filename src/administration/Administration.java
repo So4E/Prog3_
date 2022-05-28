@@ -1,6 +1,8 @@
 package administration;
 
-import mediaDB.*;
+import mediaDB.Content;
+import mediaDB.Tag;
+import mediaDB.Uploader;
 
 import java.math.BigDecimal;
 import java.time.Duration;

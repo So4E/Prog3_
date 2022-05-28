@@ -16,6 +16,6 @@ public class ChangeMediaEvent extends EventObject {
         this.address = address;
     }
 
-    public String getAddress() { return address; }
+    public String getAddress() { return this.address; }
 
 }

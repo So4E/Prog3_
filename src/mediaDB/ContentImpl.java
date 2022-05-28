@@ -3,7 +3,6 @@ package mediaDB;
 import java.util.Collection;
 
 public class ContentImpl  extends AbstractUploadable implements Content {
-    long accessCount;
     String address;
     Collection<Tag> tagCollection;
 

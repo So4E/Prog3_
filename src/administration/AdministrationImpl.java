@@ -9,7 +9,7 @@ import java.security.InvalidParameterException;
 import java.time.Duration;
 import java.util.*;
 
-import static mediaDB.Tag.*;
+import static mediaDB.Tag.Animal;
 
 
 public class AdministrationImpl implements Administration, SubjectForSizeObserver {
@@ -19,21 +19,11 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
     private BigDecimal totalSize = BigDecimal.valueOf(0);
 
     //list of producers (case sensitive)
-    private LinkedList<Uploader> producerList = new LinkedList<>();
+    private LinkedList<Uploader> producerList = new LinkedList<Uploader>();
     //map for Producers (Uploaders) with mediaCounter (String is name of Producer - case sensitive)
     private Map<String, Integer> uploaderMap = new HashMap<>();
     //map für Tags und wie oft genutzt
     private Map<Tag, Integer> tagMap = new HashMap<>();
-
-
-    //strings to decide which kind of media is to be uploaded/ changed
-    public static final String AudioVideo = "audiovideo";
-    public static final String Audio = "audio";
-    public static final String Video = "video";
-    public static final String InteractiveVideo = "interactive video";
-    public static final String LicencedAudio = "licenced audio";
-    public static final String LicencedVideo = "licenced video";
-    public static final String LicencedAudioVideo = "licenced audiovideo";
 
     //observer
     private List<Observer> beobachterList = new LinkedList<>();
@@ -149,32 +139,32 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
         Content newItem;
         Date uploadDate = new Date(); // Date-Object of this exact day and time
 
-        switch (mediaType.toLowerCase()) {
-            case AudioVideo:
+        switch (Mediatype.valueOf(mediaType)) {
+            case audiovideo:
                 newItem = new AudioVideoImpl(mediaType, producer, tags, bitrate, length,
                         optionaleParameter, size, address, uploadDate);
                 break;
-            case Audio:
+            case audio:
                 newItem = new AudioImpl(mediaType, producer, tags, bitrate, length,
                         optionaleParameter, size, address, uploadDate);
                 break;
-            case Video:
+            case video:
                 newItem = new VideoImpl(mediaType, producer, tags, bitrate, length,
                         optionaleParameter, size, address, uploadDate);
                 break;
-            case InteractiveVideo:
+            case interactivevideo:
                 newItem = new InteractiveVideoImpl(mediaType, producer, tags, bitrate, length,
                         optionaleParameter, size, address, uploadDate);
                 break;
-            case LicencedAudio:
+            case licensedaudio:
                 newItem = new LicensedAudioImpl(mediaType, producer, tags, bitrate, length,
                         optionaleParameter, size, address, uploadDate);
                 break;
-            case LicencedVideo:
+            case licensedvideo:
                 newItem = new LicensedVideoImpl(mediaType, producer, tags, bitrate, length,
                         optionaleParameter, size, address, uploadDate);
                 break;
-            case LicencedAudioVideo:
+            case licensedaudiovideo:
                 newItem = new LicensedAudioVideoImpl(mediaType, producer, tags, bitrate, length,
                         optionaleParameter, size, address, uploadDate);
                 break;
@@ -220,14 +210,14 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
     @Override
     public synchronized boolean changeMedia(String address) {
         int index = -1;
-        String mediatype = " ";
+        String type = " ";
 
         //check if there is a media file with this unique address
         for (int i = 0; i < mediaList.size(); i++) {
             //if it contains address, save mediaType and index
             if (mediaList.get(i).getAddress().equals(address)) {
                 index = i;
-                mediatype = mediaList.get(index).toString();
+                type = mediaList.get(index).toString();
             }
             //if file does not exist return false
             if (i == mediaList.size() - 1 && !mediaList.get(i).getAddress().equals(address)) {
@@ -235,33 +225,34 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
             }
 
             // if file exists increase accessCount
-            switch (mediatype) {
-                case AudioVideo:
+            Mediatype mediaType = Mediatype.valueOf(type);
+            switch (mediaType) {
+                case audiovideo:
                     AudioVideoImpl file = (AudioVideoImpl) mediaList.get(index);
                     file.increaseAccessCount();
                     break;
-                case Audio:
+                case audio:
                     AudioImpl file2 = (AudioImpl) mediaList.get(index);
                     file2.increaseAccessCount();
                     break;
-                case Video:
+                case video:
                     VideoImpl file3 = (VideoImpl) mediaList.get(index);
                     file3.increaseAccessCount();
                     benachrichtige();
                     break;
-                case InteractiveVideo:
+                case interactivevideo:
                     InteractiveVideoImpl file4 = (InteractiveVideoImpl) mediaList.get(index);
                     file4.increaseAccessCount();
                     break;
-                case LicencedAudio:
+                case licensedaudio:
                     LicensedAudioImpl file5 = (LicensedAudioImpl) mediaList.get(index);
                     file5.increaseAccessCount();
                     break;
-                case LicencedVideo:
+                case licensedvideo:
                     LicensedVideoImpl file6 = (LicensedVideoImpl) mediaList.get(index);
                     file6.increaseAccessCount();
                     break;
-                case LicencedAudioVideo:
+                case licensedaudiovideo:
                     LicensedAudioVideoImpl file7 = (LicensedAudioVideoImpl) mediaList.get(index);
                     file7.increaseAccessCount();
                     break;
