@@ -28,10 +28,10 @@ public interface Administration {
      */
     LinkedList<Uploader> listProducer();
 
-    /**
+    /**  --- Not needed anymore
      * method to get list of Uploader with counter, how many media items of this producer where uploaded
      * @return Hashmap with Name of Producer as key and integer value as count
-     */
+    */
     Map<String, Integer> listProducerWithMediaCount();
 
     /**

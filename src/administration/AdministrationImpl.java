@@ -14,7 +14,7 @@ import static mediaDB.Tag.Animal;
 
 public class AdministrationImpl implements Administration, SubjectForSizeObserver {
     //member for MediaMemory
-    private LinkedList<Content> mediaList = new LinkedList<>();
+    private LinkedList<AbstractUploadable> mediaList = new LinkedList<>();
     private BigDecimal maxSizeOfMemory;
     private BigDecimal totalSize = BigDecimal.valueOf(0);
 
@@ -136,10 +136,10 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
 
         UUID mediaID = UUID.randomUUID();
         String address = mediaID.toString();
-        Content newItem;
+        AbstractUploadable newItem;
         Date uploadDate = new Date(); // Date-Object of this exact day and time
 
-        switch (Mediatype.valueOf(mediaType)) {
+        switch (Mediatype.valueOf(mediaType.toLowerCase())) {
             case audiovideo:
                 newItem = new AudioVideoImpl(mediaType, producer, tags, bitrate, length,
                         optionaleParameter, size, address, uploadDate);
@@ -210,57 +210,16 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
     @Override
     public synchronized boolean changeMedia(String address) {
         int index = -1;
-        String type = " ";
 
         //check if there is a media file with this unique address
         for (int i = 0; i < mediaList.size(); i++) {
-            //if it contains address, save mediaType and index
+            //if it contains address increaseAccessCount
             if (mediaList.get(i).getAddress().equals(address)) {
                 index = i;
-                type = mediaList.get(index).toString();
+                mediaList.get(index).increaseAccessCount();
+                benachrichtige();
+                return true;
             }
-            //if file does not exist return false
-            if (i == mediaList.size() - 1 && !mediaList.get(i).getAddress().equals(address)) {
-                return false;
-            }
-
-            // if file exists increase accessCount
-            Mediatype mediaType = Mediatype.valueOf(type);
-            switch (mediaType) {
-                case audiovideo:
-                    AudioVideoImpl file = (AudioVideoImpl) mediaList.get(index);
-                    file.increaseAccessCount();
-                    break;
-                case audio:
-                    AudioImpl file2 = (AudioImpl) mediaList.get(index);
-                    file2.increaseAccessCount();
-                    break;
-                case video:
-                    VideoImpl file3 = (VideoImpl) mediaList.get(index);
-                    file3.increaseAccessCount();
-                    benachrichtige();
-                    break;
-                case interactivevideo:
-                    InteractiveVideoImpl file4 = (InteractiveVideoImpl) mediaList.get(index);
-                    file4.increaseAccessCount();
-                    break;
-                case licensedaudio:
-                    LicensedAudioImpl file5 = (LicensedAudioImpl) mediaList.get(index);
-                    file5.increaseAccessCount();
-                    break;
-                case licensedvideo:
-                    LicensedVideoImpl file6 = (LicensedVideoImpl) mediaList.get(index);
-                    file6.increaseAccessCount();
-                    break;
-                case licensedaudiovideo:
-                    LicensedAudioVideoImpl file7 = (LicensedAudioVideoImpl) mediaList.get(index);
-                    file7.increaseAccessCount();
-                    break;
-                default:
-                    return false;
-            }
-            benachrichtige();
-            return true;
         }
         return false;
     }

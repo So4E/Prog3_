@@ -1,3 +1,18 @@
+
+Abgabe Übung 4:
+
+1. Auflistungen sind immer sichtbar und werden automatisch aktualisiert - done
+2. sortierbare Darstellung der Mediadateien mit Abrufadresse, Anzahl der
+Abrufe, Produzent und Upload-Datum -> produzent und upload datum fehlt noch -> kommt wenn linkedList in admin
+neu geordnet mit superKlasse, die alle getter der mediaDB vereint
+3. skalierbareDarstellung -> done -> war falsch, nun gefixed
+4. FXML & data binding verwendet -> done
+5. Änderung der Abrufadresse mittels drag&drop - fehlt noch
+
+Quellen:
+- anzeige der Werte in der Tabelle: https://docs.oracle.com/javase/8/javafx/api/javafx/collections/ObservableList.html
+- angeklickte Objekte nutzen: https://jenkov.com/tutorials/javafx/tableview.html#:~:text=It%20is%20possible%20to%20select,the%20select(int)%20method.
+
 Checkliste:
 
 zusätzlich erfüllte Anforderungen:

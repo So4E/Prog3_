@@ -6,16 +6,6 @@ import java.util.Collection;
 import java.util.Date;
 
 public class AudioImpl extends AbstractUploadable implements Audio {
-    String mediaType;
-    Uploader uploader;
-    Collection<Tag> tagCollection;
-    BigDecimal bitrate;
-    Duration length;
-    BigDecimal size;
-    String address;
-    Date uploadDate;
-    //optionale Parameter
-    int samplingRate;
 
     public AudioImpl(String mediaType, Uploader nameOfProducer, Collection<Tag> tags, BigDecimal bitrate, Duration length,
                      String optionaleParameter, BigDecimal size, String address, Date uploadDate) {
@@ -42,55 +32,5 @@ public class AudioImpl extends AbstractUploadable implements Audio {
             //default value
             this.samplingRate = 800;
         }
-    }
-
-    @Override
-    public String toString() {
-        return mediaType.toLowerCase();
-    }
-
-    @Override
-    public int getSamplingRate() {
-        return this.samplingRate;
-    }
-
-    @Override
-    public String getAddress() {
-        return this.address;
-    }
-
-    @Override
-    public Collection<Tag> getTags() {
-        return this.tagCollection;
-    }
-
-    @Override
-    public long getAccessCount() {
-        return this.accessCount;
-    }
-
-    @Override
-    public BigDecimal getBitrate() {
-        return this.bitrate;
-    }
-
-    @Override
-    public Duration getLength() {
-        return this.length;
-    }
-
-    @Override
-    public BigDecimal getSize() {
-        return this.size;
-    }
-
-    @Override
-    public Uploader getUploader() {
-        return this.uploader;
-    }
-
-    @Override
-    public Date getUploadDate() {
-        return this.uploadDate;
     }
 }
