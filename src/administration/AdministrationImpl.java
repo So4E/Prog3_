@@ -4,6 +4,7 @@ import EventSystem.Observer.Observer;
 import EventSystem.Observer.SubjectForSizeObserver;
 import mediaDB.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.time.Duration;
@@ -12,21 +13,22 @@ import java.util.*;
 import static mediaDB.Tag.Animal;
 
 
-public class AdministrationImpl implements Administration, SubjectForSizeObserver {
+public class AdministrationImpl implements Administration, SubjectForSizeObserver, Serializable {
     //member for MediaMemory
-    private LinkedList<AbstractUploadable> mediaList = new LinkedList<>();
-    private BigDecimal maxSizeOfMemory;
-    private BigDecimal totalSize = BigDecimal.valueOf(0);
+    private LinkedList<AllUploadables> mediaList = new LinkedList<AllUploadables>();
+    private BigDecimal maxSizeOfMemory = BigDecimal.valueOf(0);
+    private BigDecimal totalSize= BigDecimal.valueOf(0);
+
+    //TODO wo checke ich die Version der Serialisation? bei alternativem Constructor für JBP
+    static final long serialVersionUID = 1L;
 
     //list of producers (case sensitive)
-    private LinkedList<Uploader> producerList = new LinkedList<Uploader>();
-    //map for Producers (Uploaders) with mediaCounter (String is name of Producer - case sensitive)
-    private Map<String, Integer> uploaderMap = new HashMap<>();
-    //map für Tags und wie oft genutzt
-    private Map<Tag, Integer> tagMap = new HashMap<>();
+    private LinkedList<UploaderSuper> producerList = new LinkedList<UploaderSuper>();
+    private Map<Tag, Integer> tagMap = new HashMap<Tag, Integer>();
 
+    //Todo falls ganze admin persistierbar sein soll -> mit transient objecte markieren, die nicht serialisiert werden sollen
     //observer
-    private List<Observer> beobachterList = new LinkedList<>();
+    private transient List<Observer> beobachterList;
 
     //constructor
     public AdministrationImpl(BigDecimal capacity) {
@@ -43,6 +45,18 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
         tagMap.put(Tag.News, 0);
     }
 
+    //default constructor for JBP
+    public AdministrationImpl(BigDecimal capacity, LinkedList<UploaderSuper> uploaderlist, HashMap<Tag, Integer> tagMap,
+                              LinkedList<AllUploadables> mediaList, BigDecimal totalSize) {
+        this.maxSizeOfMemory = capacity;
+        this.producerList = uploaderlist;
+        this.tagMap = tagMap;
+        this.mediaList = mediaList;
+        this.totalSize = totalSize;
+    }
+
+
+
     //--------------------Producer Methods ---------------------------------------------------
     @Override
     public synchronized boolean addProducer(String name) {
@@ -53,9 +67,9 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
         }
 
         //if producer is not in list add him to list and map
-        Uploader newProducer = new UploaderImpl(name);
+        UploaderSuper newProducer = new UploaderImpl(name);
         producerList.add(newProducer);
-        uploaderMap.put(name, 0);
+        newProducer.mediaCount = 0;
         return true;
     }
 
@@ -65,9 +79,14 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
     }
 
     @Override
+    public synchronized LinkedList<UploaderSuper> listSuperProducer() {
+        return new LinkedList<>(this.producerList);
+    }
+
+    /*@Override
     public synchronized Map<String, Integer> listProducerWithMediaCount() {
         return new HashMap<String, Integer>(this.uploaderMap);
-    }
+    }*/
 
     @Override
     public synchronized boolean deleteProducer(String name) {
@@ -78,7 +97,7 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
         //if listed - delete producer without deleting associated media objects
         else {
             producerList.remove(getIndexOfProducer(name));
-            uploaderMap.remove(name);
+            //uploaderMap.remove(name);
         }
         return true;
     }
@@ -120,7 +139,7 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
             return false;
         }
         // if producer was already saved, remember for upload of media files
-        Uploader producer = producerList.get(getIndexOfProducer(nameOfProducer));
+        UploaderSuper producer = producerList.get(getIndexOfProducer(nameOfProducer));
 
         //calculate size of Media Object (random formula, in case this needs to be correct, change
         long calculateSize = bitrate.longValue() + length.toHours(); // size will be only bitrate with this formula
@@ -136,7 +155,7 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
 
         UUID mediaID = UUID.randomUUID();
         String address = mediaID.toString();
-        AbstractUploadable newItem;
+        AllUploadables newItem;
         Date uploadDate = new Date(); // Date-Object of this exact day and time
 
         switch (Mediatype.valueOf(mediaType.toLowerCase())) {
@@ -185,8 +204,10 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
         }
 
         benachrichtige();                       //tell SizeObserver that there were changes made
-        int oldCounter = uploaderMap.get(nameOfProducer); // get producer counter
-        uploaderMap.put(nameOfProducer, oldCounter + 1); // increase and save
+        UploaderSuper superProducer = producer;
+        superProducer.increaseMediaCount();
+        //int oldCounter = uploaderMap.get(nameOfProducer); // get producer counter
+        //uploaderMap.put(nameOfProducer, oldCounter + 1); // increase and save
 
         return true;
     }
@@ -235,8 +256,13 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
                 Uploadable thisObject = (Uploadable) object;
                 String uploaderName = thisObject.getUploader().getName();
                 //---- and decrease MediaCounter for this uploader -1 (put overwrites existing int at same key)
-                int oldMediaCounter = uploaderMap.get(uploaderName);
-                uploaderMap.put(uploaderName, oldMediaCounter - 1);
+                //int oldMediaCounter = uploaderMap.get(uploaderName);
+                //uploaderMap.put(uploaderName, oldMediaCounter - 1);
+                int index = getIndexOfProducer(uploaderName);
+                if (index >= 0) {
+                    producerList.get(index).decreaseMediaCount();
+                }
+
 
                 //get size of object and decrease used storage space
                 MediaContent thatObject = (MediaContent) object;
@@ -275,24 +301,60 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
         return this.totalSize;
     }
 
-    //method to see what maxSize of Memory is  ----------> maybe not needed - delete later?
     public synchronized BigDecimal getMaxSizeOfMemory() {
         return this.maxSizeOfMemory;
     }
 
     @Override
     public synchronized void meldeAn(Observer observer) {
+        if (this.beobachterList == null) {
+            this.beobachterList = new LinkedList<>();
+        }
         this.beobachterList.add(observer);
     }
 
     @Override
     public synchronized void meldeAb(Observer observer) {
+        if (beobachterList == null) return;
         this.beobachterList.remove(observer);
     }
 
     @Override
     public synchronized void benachrichtige() {
+        if (beobachterList == null) return;
         for (Observer observer : this.beobachterList) observer.aktualisiere();
     }
+
+    /*
+    @Override
+    public void saveMediaFiles(String pathToFileFromScrFolder) {
+        JOS.serialize(pathToFileFromScrFolder, mediaList);
+    }
+
+    @Override
+    public void saveProducer(String pathToFileFromScrFolder) {
+        JOS.serialize(pathToFileFromScrFolder, producerList);
+    }
+
+    @Override
+    public void loadMediaFiles(String pathToFileFromScrFolder) {
+        Collection<AbstractUploadable> mediaListNeu = JOS.deserialize(pathToFileFromScrFolder);
+        this.mediaList = (LinkedList<AbstractUploadable>) mediaListNeu;
+
+        double newTotalSize = 0;
+        for (int i = 0; i < mediaList.size(); i++) {
+            BigDecimal size = mediaList.get(i).getSize();
+            double newSize = size.doubleValue() + newTotalSize;
+            newTotalSize = newSize;
+        }
+        this.totalSize = new BigDecimal(newTotalSize);
+        //datenbank-grösse wird dabei nicht mitpersistiert
+    }
+
+    @Override
+    public void loadProducer(String pathToFileFromScrFolder) {
+        Collection<UploaderSuper> uploaderListNeu = JOS.deserialize(pathToFileFromScrFolder);
+        this.producerList = (LinkedList<UploaderSuper>) uploaderListNeu;
+    }*/
 }
 

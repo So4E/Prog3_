@@ -56,14 +56,14 @@ class AdministrationImplTest {
         assertEquals(expected, actual);
     }
 
-    @Test
+    /*@Test ----> obsolet, da MediaCount nun in Uploader gespeichert
     void checkIfProducerIsAlsoOnMapForCounts() {
         Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
         testAdmin.addProducer("Horst");
         int expected = 0;
         int actualMediaCount = testAdmin.listProducerWithMediaCount().get("Horst");
         assertEquals(expected, actualMediaCount);
-    }
+    }*/
 
     @Test
     void checkIfProducerCountsAreAdjustedWhenMediaFilesAreBeingAddedAndDeleted() {
@@ -75,9 +75,10 @@ class AdministrationImplTest {
         testAdmin.deleteMedia(testAdmin.listMedia().get(1).getAddress());
         testAdmin.addMedia("Audio", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
         testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+        int horstsIndex = testAdmin.getIndexOfProducer("Horst");
 
         int expected = 3;
-        int actualMediaCount = testAdmin.listProducerWithMediaCount().get("Horst");
+        int actualMediaCount = testAdmin.listSuperProducer().get(horstsIndex).getMediaCount();
         assertEquals(expected, actualMediaCount);
     }
 
@@ -107,9 +108,11 @@ class AdministrationImplTest {
 
         testAdmin.deleteProducer("Horst");
 
-        Object expected = null;
-        Object actual = testAdmin.listProducerWithMediaCount().get("Horst");
-        assertEquals(expected, actual);
+        int horstsIndex = testAdmin.getIndexOfProducer("Horst");
+
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            testAdmin.listProducer().get(horstsIndex);
+        });
     }
 
     @Test

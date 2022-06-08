@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.Date;
 
-public class AudioImpl extends AbstractUploadable implements Audio {
+public class AudioImpl extends AllUploadables implements Audio {
 
     public AudioImpl(String mediaType, Uploader nameOfProducer, Collection<Tag> tags, BigDecimal bitrate, Duration length,
                      String optionaleParameter, BigDecimal size, String address, Date uploadDate) {
@@ -18,6 +18,10 @@ public class AudioImpl extends AbstractUploadable implements Audio {
         this.size = size;
         this.address = address;
         this.uploadDate = uploadDate;
+        this.holder = nameOfProducer.getName();
+        this.optionaleParameter = optionaleParameter;
+
+
 
         //check if optionaleParameter has int for sampling rate, if not setDefault
         int potentialSamplingRate;

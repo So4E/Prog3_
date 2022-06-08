@@ -1,5 +1,5 @@
 package mediaDB;
 
-public class ContentImpl  extends AbstractUploadable implements Content {
+public class ContentImpl  extends AllUploadables implements Content {
 
 }

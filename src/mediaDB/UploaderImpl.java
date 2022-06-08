@@ -1,29 +1,14 @@
 package mediaDB;
 
-public class UploaderImpl implements Uploader {
-    String name;
-    int mediaCount;
+import java.io.Serializable;
+
+public class UploaderImpl extends UploaderSuper implements Uploader, Serializable {
 
     public UploaderImpl (String name){
         this.name = name;
     }
 
-    @Override
-    public String getName() {
-        return this.name;
-    }
 
-    public int getMediaCount() {
-        return this.mediaCount;
-    }
 
-    public boolean increaseMediaCount(){
-        this.mediaCount = mediaCount + 1;
-        return true;
-    }
 
-    public boolean decreaseMediaCount() {
-        this.mediaCount = this.mediaCount -1;
-        return true;
-    }
 }

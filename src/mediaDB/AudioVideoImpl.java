@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 
 //my prototype of MediaFile -> if something essential changes here - change in other classes as well
-public class AudioVideoImpl extends AbstractUploadable implements AudioVideo {
+public class AudioVideoImpl extends AllUploadables implements AudioVideo {
 
     public AudioVideoImpl (String mediaType, Uploader nameOfProducer, Collection<Tag> tags, BigDecimal bitrate, Duration length,
                            String optionaleParameter, BigDecimal size, String address, Date uploadDate) {
@@ -19,6 +19,9 @@ public class AudioVideoImpl extends AbstractUploadable implements AudioVideo {
         this.size = size;
         this.address = address;
         this.uploadDate = uploadDate;
+        this.holder = nameOfProducer.getName();
+        this.optionaleParameter = optionaleParameter;
+
 
         //split optional parameter into resolution and sampling rate
         String parameter[] = optionaleParameter.split(" ");
