@@ -69,6 +69,7 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
         //if producer is not in list add him to list and map
         UploaderSuper newProducer = new UploaderImpl(name);
         producerList.add(newProducer);
+        System.err.println(name + "was added");
         newProducer.mediaCount = 0;
         return true;
     }

@@ -1,11 +1,13 @@
 Abgabe Übung 5
 
 1. SpeichernundLadenderGeschäftslogikmitJOSundJBP --> JOS läuft, JBP findet drei Methoden nicht..
-2. Stellvertreter-Tests für das Lesen und Schreiben aus/in Streams
-3. Architekturdiagramm
+(2. Stellvertreter-Tests für das Lesen und Schreiben aus/in Streams)
+3. Architekturdiagramm ---> hier im Projekt im Default Ordner
 empfohlene Realisierungen ohne Relevanz für den Beleg
 4. Abgabe als Gradle-Projekt
 5. Anbindung an privates git-Repo ---> done
+
+Quelle für NonBeanItem Big Decimal und Date: http://www.java2s.com/example/java-api/java/beans/xmlencoder/setpersistencedelegate-2-0.html
 
 Abgabe Übung 4:
 
@@ -52,8 +54,8 @@ Simulation 2:
 __________________ALTE ANMERKUNGEN
 Abgabe Übung 2: Anmerkungen:
 
-Bei SetUp in Main soll der User zuerst die Größe der Datenbank (capacity),
-    dann vermeintlich TCP oder UDP angeben
+Bei SetUpCLI kann der User entweder die Größe der Datenbank (capacity),
+    TCP oder UDP, oder nichts angeben
 
 Anlegen neuer audiovideo oder audio datei ist möglich über Console - Beispiel:
 

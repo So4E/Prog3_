@@ -1,4 +1,4 @@
-package EventSystem.EventLogicListenerToGL;
+package viewControl.EventLogicListenerToGlListener;
 
 import EventSystem.EventLogicToGL.ProducerEvent;
 import EventSystem.EventLogicToGL.ProducerEventListener;

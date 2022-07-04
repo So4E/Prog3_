@@ -1,4 +1,4 @@
-package EventSystem.EventLogicListenerToGL;
+package viewControl.EventLogicListenerToGlListener;
 
 import EventSystem.EventLogicToGL.DeleteMediaEvent;
 import EventSystem.EventLogicToGL.DeleteMediaEventListener;

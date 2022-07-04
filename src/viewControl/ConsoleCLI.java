@@ -1,10 +1,10 @@
-package EventSystem.viewControl;
+package viewControl;
 
-import EventSystem.EventLogicFromGL.MediaListEventHandler;
 import EventSystem.EventLogicToGL.*;
 import mediaDB.Tag;
 import utilities.AnalyzeUserInput;
 import utilities.CommandMode;
+import utilities.HandlerConfigSuperclassToGL;
 import utilities.Modus;
 
 import java.math.BigDecimal;
@@ -16,59 +16,12 @@ import static java.lang.System.exit;
 import static mediaDB.Mediatype.*;
 import static utilities.Modus.START;
 
-public class ConsoleCLI {
+public class ConsoleCLI extends HandlerConfigSuperclassToGL {
     public Modus modus;
     private AnalyzeUserInput analyzeUserInput = new AnalyzeUserInput();
 
     public ConsoleCLI() {
         this.modus = START;
-    }
-
-
-    //------------ Producer Event Handler
-    private ProducerEventHandler addProducerHandler, deleteProducerHandler;
-
-    public void setAddProducerHandler(ProducerEventHandler handler) {
-        this.addProducerHandler = handler;
-    }
-
-    public void setDeleteProducerHandler(ProducerEventHandler handler) {
-        this.deleteProducerHandler = handler;
-    }
-
-    //------------- MediaEvent Handler (add Media)
-    private MediaEventHandler addMediaHandler;
-
-    public void setAddMediaHandler(MediaEventHandler handler) {
-        this.addMediaHandler = handler;
-    }
-
-    //------------- DeleteMediaEvent Handler
-    private DeleteMediaEventHandler deleteMediaEventHandler;
-
-    public void setDeleteMediaEventHandler(DeleteMediaEventHandler handler) {
-        this.deleteMediaEventHandler = handler;
-    }
-
-    //------------- ChangeMediaEvent Handler
-    private ChangeMediaEventHandler changeMediaEventHandler;
-
-    public void setChangeMediaEventHandler(ChangeMediaEventHandler handler) {
-        this.changeMediaEventHandler = handler;
-    }
-
-    //------------- ShowMediaListEvent Handler
-    private ShowMediaListEventHandler showMediaListEventHandler;
-
-    public void setShowMediaListEventHandler(ShowMediaListEventHandler handler) {
-        this.showMediaListEventHandler = handler;
-    }
-
-    //_____________ MediaListEvent Handler
-    private MediaListEventHandler mediaListEventHandler;
-
-    public void setMediaListEventHandler(MediaListEventHandler handler) {
-        this.mediaListEventHandler = handler;
     }
 
 
@@ -122,7 +75,7 @@ public class ConsoleCLI {
                                 }
                                 break;
                             } else {
-                                ProducerEvent producerEvent = new ProducerEvent(this, input);
+                                ProducerEvent producerEvent = new ProducerEvent(this, input, true);
                                 if (null != this.addProducerHandler) addProducerHandler.handle(producerEvent);
                                 System.out.println("Adding producer.");
                                 break;
@@ -137,7 +90,7 @@ public class ConsoleCLI {
                             // gelöscht werden muss -> rückgabe aus GL, ob producer oder event gefunden
                             //-- gerade wird beides erzeugt
                             DeleteMediaEvent deleteMediaEvent = new DeleteMediaEvent(this, input);
-                            ProducerEvent deleteProducerEvent = new ProducerEvent(this, input);
+                            ProducerEvent deleteProducerEvent = new ProducerEvent(this, input, false);
 
                             if (null != this.deleteMediaEventHandler) {
                                 deleteMediaEventHandler.handle(deleteMediaEvent);
@@ -159,7 +112,7 @@ public class ConsoleCLI {
                                 }*/
 
                                 //ShowMediaListEvent erzeugen und versenden
-                                ShowMediaListEvent event = new ShowMediaListEvent(this, mediaListEventHandler, type);
+                                ShowMediaListEvent event = new ShowMediaListEvent(this, type);
                                 if (null != this.showMediaListEventHandler) {
                                     showMediaListEventHandler.handle(event);
                                 }

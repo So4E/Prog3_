@@ -1,7 +1,5 @@
 package EventSystem.EventLogicToGL;
 
-import EventSystem.EventLogicListenerToGL.ChangeMediaListener;
-
 import java.util.LinkedList;
 import java.util.List;
 

@@ -2,13 +2,13 @@ package EventSystem.EventLogicToGL;
 
 import mediaDB.Tag;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.EventObject;
-import java.util.LinkedList;
 
-public class MediaEvent extends EventObject {
+public class MediaEvent extends EventObject implements Serializable {
     String mediaType;
     String nameOfProducer;
     Collection<Tag> tags;
