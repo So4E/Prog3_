@@ -1,22 +1,22 @@
 package viewControl;
 
-import EventSystem.EventLogicToGL.*;
+import EventSystem.ToGL.*;
 import mediaDB.Tag;
 import utilities.AnalyzeUserInput;
 import utilities.CommandMode;
-import utilities.HandlerConfigSuperclassToGL;
+import utilities.HandlerConfigSuperclassToGLAndBack;
 import utilities.Modus;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Scanner;
 
+import static administration.Mediatype.*;
 import static java.lang.System.exit;
-import static mediaDB.Mediatype.*;
 import static utilities.Modus.START;
 
-public class ConsoleCLI extends HandlerConfigSuperclassToGL {
+public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
     public Modus modus;
     private AnalyzeUserInput analyzeUserInput = new AnalyzeUserInput();
 
@@ -65,7 +65,7 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGL {
                                     System.out.println("S.next() for optional parameters did not work");
                                 }
 
-                                Collection<Tag> tagCollection = analyzeUserInput.splitTagInput(tagsInput);
+                                LinkedList<Tag> tagCollection = analyzeUserInput.splitTagInput(tagsInput);
 
                                 MediaEvent event = new MediaEvent(this, mediatype, nameOfProducer, tagCollection, bitrate,
                                         length, optionaleParameter);

@@ -1,9 +1,9 @@
-import EventSystem.Observer.Observer;
-import EventSystem.Observer.SizeObserver;
-import EventSystem.Observer.TagObserver;
-import Simulationen.SimObserver.AddOrDeleteObserverImpl;
-import Simulationen.SimulationOne.AddThread;
-import Simulationen.SimulationOne.DeleteThread;
+import EventSystem.Observer_InversionOfControl.Observer;
+import EventSystem.Observer_InversionOfControl.SizeObserver;
+import EventSystem.Observer_InversionOfControl.TagObserver;
+import Simulations.SimObserver.AddOrDeleteObserverImpl;
+import Simulations.SimulationOne.AddThread;
+import Simulations.SimulationOne.DeleteThread;
 import administration.AdministrationImpl;
 
 import java.math.BigDecimal;

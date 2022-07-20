@@ -1,3 +1,14 @@
+Abgabe Übung 6
+
+TCP Server ist implementiert, TCP Server für mehrere Clients ist noch zu aktualisieren
+Client implementiert
+Einfügen von Producern sollte tun
+Anzeigen von MediaListe fast ausimplementiert (bis auf Anzeige sollte Weg da sein)
+
+
+
+
+
 Abgabe Übung 5
 
 1. SpeichernundLadenderGeschäftslogikmitJOSundJBP --> JOS läuft, JBP findet drei Methoden nicht..
@@ -54,7 +65,7 @@ Simulation 2:
 __________________ALTE ANMERKUNGEN
 Abgabe Übung 2: Anmerkungen:
 
-Bei SetUpCLI kann der User entweder die Größe der Datenbank (capacity),
+Bei CLI_withTCPClient kann der User entweder die Größe der Datenbank (capacity),
     TCP oder UDP, oder nichts angeben
 
 Anlegen neuer audiovideo oder audio datei ist möglich über Console - Beispiel:

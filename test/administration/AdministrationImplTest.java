@@ -1,6 +1,5 @@
 package administration;
 
-import mediaDB.AudioVideoImpl;
 import mediaDB.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -8,8 +7,9 @@ import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.time.Duration;
 import java.util.LinkedList;
+import java.util.UUID;
 
-import static mediaDB.Tag.Tutorial;
+import static mediaDB.Tag.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AdministrationImplTest {
@@ -56,25 +56,16 @@ class AdministrationImplTest {
         assertEquals(expected, actual);
     }
 
-    /*@Test ----> obsolet, da MediaCount nun in Uploader gespeichert
-    void checkIfProducerIsAlsoOnMapForCounts() {
-        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
-        testAdmin.addProducer("Horst");
-        int expected = 0;
-        int actualMediaCount = testAdmin.listProducerWithMediaCount().get("Horst");
-        assertEquals(expected, actualMediaCount);
-    }*/
-
     @Test
     void checkIfProducerCountsAreAdjustedWhenMediaFilesAreBeingAddedAndDeleted() {
         Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
         testAdmin.addProducer("Horst");
 
-        testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
-        testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("InteractiveVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("Video", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "");
         testAdmin.deleteMedia(testAdmin.listMedia().get(1).getAddress());
         testAdmin.addMedia("Audio", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
-        testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("LicensedVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
         int horstsIndex = testAdmin.getIndexOfProducer("Horst");
 
         int expected = 3;
@@ -102,7 +93,7 @@ class AdministrationImplTest {
         testAdmin.addProducer("Hildegard");
         testAdmin.addProducer("BABA");
 
-        testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("Video", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
         testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
         testAdmin.deleteMedia(testAdmin.listMedia().get(1).getAddress());
 
@@ -113,6 +104,24 @@ class AdministrationImplTest {
         assertThrows(IndexOutOfBoundsException.class, () -> {
             testAdmin.listProducer().get(horstsIndex);
         });
+    }
+
+    @Test
+    void checkIfMediaFilesBeenDeletedWhenDeletingProducer() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        testAdmin.addProducer("Horst");
+        testAdmin.addProducer("Hildegard");
+        testAdmin.addProducer("BABA");
+
+        testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("AudioVideo", "Horst", collection, BigDecimal.valueOf(10), Duration.ofMinutes(5), "139 108");
+
+        testAdmin.deleteProducer("Horst");
+
+        int expected = 0;
+        int actual = testAdmin.listMedia().size();
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -142,8 +151,19 @@ class AdministrationImplTest {
         testAdmin.addProducer("JZ");
         collection.add(Tutorial);
         boolean expected = true;
-        boolean actual = testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(10),
-                Duration.ofMinutes(5), "139 108");
+        boolean actual = testAdmin.addMedia("LicensedAudioVideo", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "WarnerBros 139 108");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void addLicencedAudioVideoWithIncorrectParametersSetsDefaults() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        testAdmin.addProducer("JZ");
+        collection.add(Tutorial);
+        boolean expected = true;
+        boolean actual = testAdmin.addMedia("LicensedAudioVideo", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "345 Werner ooops");
         assertEquals(expected, actual);
     }
 
@@ -151,9 +171,8 @@ class AdministrationImplTest {
     void addMediaCheckOneItemSavedOnLinkedList() {
         Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
         testAdmin.addProducer("JZ");
-        collection.add(Tutorial);
         testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(10),
-                Duration.ofMinutes(5), "139 108");
+                Duration.ofMinutes(5), "");
 
         int expected = 1;
         int actual = testAdmin.listMedia().size();
@@ -174,6 +193,39 @@ class AdministrationImplTest {
         assertThrows(IndexOutOfBoundsException.class, () -> {
             testAdmin.listMedia().get(3);
         });
+    }
+
+    @Test
+    void getTotalSize() {
+        AdministrationImpl testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        collection.add(Tutorial);
+
+        testAdmin.addProducer("JZ");
+        testAdmin.addProducer("Heinz Horst");
+
+        testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("Audio", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("LicensedAudio", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("Video", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 Dieter");
+
+        BigDecimal expected = BigDecimal.valueOf(4 * 10);
+        BigDecimal actualHowManyTutorialTagsOnTagList = testAdmin.getTotalSize();
+
+        assertEquals(expected, actualHowManyTutorialTagsOnTagList);
+    }
+
+    @Test
+    void getMaxSizeOfMemory() {
+        AdministrationImpl testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+
+        BigDecimal expected = BigDecimal.valueOf(100);
+        BigDecimal actualHowManyTutorialTagsOnTagList = testAdmin.getMaxSizeOfMemory();
+
+        assertEquals(expected, actualHowManyTutorialTagsOnTagList);
     }
 
     @Test
@@ -248,6 +300,22 @@ class AdministrationImplTest {
 
         long expected = 1;
         long actual = testAdmin.listMedia().get(0).getAccessCount();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void tryChangeMediaWithNonExistantAddress() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        collection.add(Tutorial);
+
+        testAdmin.addProducer("JZ");
+        testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+
+        UUID random = UUID.randomUUID();
+
+        boolean expected = false;
+        boolean actual = testAdmin.changeMedia(random.toString());
         assertEquals(expected, actual);
     }
 
@@ -373,8 +441,119 @@ class AdministrationImplTest {
         int expected = 2;
         int actualHowManyAudioVideo = testAdmin.listMedia("AuDIoVideo").size();
 
-        assertEquals(expected,actualHowManyAudioVideo);
+        assertEquals(expected, actualHowManyAudioVideo);
     }
+
+    @Test
+    void getUseOfTagsTutorial() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        collection.add(Tutorial);
+
+        testAdmin.addProducer("JZ");
+        testAdmin.addProducer("Heinz Horst");
+
+        testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("Audio", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("LicensedAudio", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        //Ursula is not saved as producer -> media file will not be added
+        testAdmin.addMedia("InteractiveVideo", "Ursula", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("AudioVideo", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+
+        int expected = 4;
+        int actualHowManyTutorialTagsOnTagList = testAdmin.getUseOfTags().get(Tutorial);
+
+        assertEquals(expected, actualHowManyTutorialTagsOnTagList);
+    }
+
+    @Test
+    void getUseOfTagsNews() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        collection.add(Tutorial);
+
+        testAdmin.addProducer("JZ");
+        testAdmin.addProducer("Heinz Horst");
+
+        testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("Audio", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+
+        collection.add(News);
+        testAdmin.addMedia("LicensedAudio", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        //Ursula is not saved as producer -> media file will not be added
+        testAdmin.addMedia("InteractiveVideo", "Ursula", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("AudioVideo", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+
+        int expected = 2;
+        int actualHowManyTutorialTagsOnTagList = testAdmin.getUseOfTags().get(News);
+
+        assertEquals(expected, actualHowManyTutorialTagsOnTagList);
+    }
+
+    @Test
+    void getUsedTags() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+
+        testAdmin.addProducer("JZ");
+        testAdmin.addProducer("Heinz Horst");
+
+        collection.add(Tutorial);
+        testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("Audio", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+
+        collection.add(News);
+        testAdmin.addMedia("LicensedAudio", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("AudioVideo", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+
+        LinkedList<Tag> expectedTags = new LinkedList<>();
+        expectedTags.add(Tutorial);
+        expectedTags.add(News);
+
+        LinkedList<Tag> actuallyReturnedUsedTags = testAdmin.getUsedTags();
+
+        assertEquals(expectedTags, actuallyReturnedUsedTags);
+    }
+
+    @Test
+    void getNotUsedTags() {
+        Administration testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+
+        testAdmin.addProducer("JZ");
+        testAdmin.addProducer("Heinz Horst");
+
+        collection.add(Tutorial);
+        testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("Audio", "JZ", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+
+        collection.add(News);
+        testAdmin.addMedia("LicensedAudio", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+        testAdmin.addMedia("AudioVideo", "Heinz Horst", collection, BigDecimal.valueOf(10),
+                Duration.ofMinutes(5), "139 108");
+
+        LinkedList<Tag> expectedTags = new LinkedList<>();
+        expectedTags.add(Animal);
+        expectedTags.add(Lifestyle);
+
+        LinkedList<Tag> actuallyReturnedNotUsedTags = testAdmin.getNotUsedTags();
+
+        assertEquals(expectedTags, actuallyReturnedNotUsedTags);
+    }
+
 
 }
     /* -------------------- MOCKITO TUT NICHT -----------> in Übung fragen

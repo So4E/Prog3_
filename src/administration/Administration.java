@@ -3,18 +3,13 @@ package administration;
 import mediaDB.Content;
 import mediaDB.Tag;
 import mediaDB.Uploader;
-import mediaDB.UploaderSuper;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 
 public interface Administration {
-
-    //TO DO - method to give back only media with chosen Type
-    //TO DO - method to give back all used and not used tags in memory
 
     /**
      * method to add a new producer to producerList
@@ -65,7 +60,7 @@ public interface Administration {
      * @param optionaleParameter
      * @return true if done, false if adding failed
      */
-    boolean addMedia(String mediaType, String nameOfProducer, Collection<Tag> tags, BigDecimal bitrate,
+    boolean addMedia(String mediaType, String nameOfProducer, LinkedList<Tag> tags, BigDecimal bitrate,
                      Duration length, String optionaleParameter);
 
     /**
@@ -87,6 +82,18 @@ public interface Administration {
      */
     Map<Tag, Integer> getUseOfTags();
 
+    /**
+     * method to get all used Tags from admin
+     * @return list of used tags
+     */
+    LinkedList<Tag> getUsedTags();
+
+    /**
+     * method to get all Tags from enum, that were not yet used in admin
+     * @return list of these not used tags
+     */
+    LinkedList<Tag> getNotUsedTags();
+
 
         /**
          * method to change Media which will increase AccessCount of a MediaItem
@@ -102,11 +109,4 @@ public interface Administration {
      * be deleted due to other reason
      */
     boolean deleteMedia(String address);
-
-    /*
-    void saveMediaFiles(String pathToFileFromScrFolder);
-    void saveProducer(String pathToFileFromScrFolder);
-
-    void loadMediaFiles(String pathToFileFromScrFolder);
-    void loadProducer(String pathToFileFromScrFolder);*/
 }
