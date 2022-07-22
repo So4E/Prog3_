@@ -1,7 +1,7 @@
 package viewControl.EventLogicToGlListener;
 
-import EventSystem.ToGL.DeleteMediaEvent;
-import EventSystem.ToGL.DeleteMediaEventListener;
+import EventSystem.ToGL.EinfuegenUndLoeschenModus.DeleteMediaEvent;
+import EventSystem.ToGL.EinfuegenUndLoeschenModus.DeleteMediaEventListener;
 import administration.Administration;
 
 public class DeleteMediaListener implements DeleteMediaEventListener {

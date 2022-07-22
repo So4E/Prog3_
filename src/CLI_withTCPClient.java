@@ -1,15 +1,26 @@
+import EventSystem.FromGL.*;
+import EventSystem.ToGL.AendernModus.ChangeMediaEventHandler;
+import EventSystem.ToGL.Anzeigenmodus.*;
+import EventSystem.ToGL.EinfuegenUndLoeschenModus.DeleteMediaEventHandler;
+import EventSystem.ToGL.EinfuegenUndLoeschenModus.MediaEventHandler;
+import EventSystem.ToGL.EinfuegenUndLoeschenModus.ProducerEventHandler;
+import EventSystem.ToGL.EinfuegenUndLoeschenModus.ProducerEventListener;
+import EventSystem.ToGL.Persistenzmodus.LoadWithJOSEventHandler;
+import EventSystem.ToGL.Persistenzmodus.LoadWithJOSEventListener;
+import EventSystem.ToGL.Persistenzmodus.SaveWithJOSEventHandler;
+import EventSystem.ToGL.Persistenzmodus.SaveWithJOSEventListener;
+import ReturnFromGlListener.LoadingJOSListener;
+import ReturnFromGlListener.ShowingProducerListListener;
+import ReturnFromGlListener.ShowingTagsListener;
 import TCP_Client_Server_ListenerAndHandler.ClientStreamHandler;
 import TCP_Client_Server_ListenerAndHandler.ClientStreamListener;
-import EventSystem.FromGL.MediaListEventHandler;
-import EventSystem.FromGL.MediaListEventListener;
-import EventSystem.ToGL.*;
 import EventSystem.Observer_InversionOfControl.Observer;
 import EventSystem.Observer_InversionOfControl.SizeObserver;
 import EventSystem.Observer_InversionOfControl.TagObserver;
 import administration.Administration;
 import administration.AdministrationImpl;
 import viewControl.ConsoleCLI;
-import ReturnFromGlListener.MediaListListener;
+import ReturnFromGlListener.ShowingMediaListListener;
 import viewControl.EventLogicToGlListener.*;
 
 import java.io.IOException;
@@ -24,23 +35,25 @@ public class CLI_withTCPClient {
     public static void main(String[] args) {
         BigDecimal defaultCapacity = new BigDecimal(10000);
 
+        //case no arguments are given, start CLISetup with default capacity
+        if (args.length == 0) {
+            startCLISetup(defaultCapacity);
+        }
+
+        //case arguments are given
         if (args.length > 0) {
             //args auslesen: capacity oder TCP/UDP = args[0]
-            //wenn TCP oder UDP -> neuer listener in alle alten handler einhängen, der events serialisiert in
-            //  Stream schreibt
             if (args[0].equals("TCP")) {
-
                 ConsoleCLI console = new ConsoleCLI();
-                ClientStreamListener streamListener = null;
-                ClientStreamHandler streamHandler = null;
+                ClientStreamListener clientStreamListener = null;
+                ClientStreamHandler clientStreamHandler = null;
 
-                //client
                 try {
                     Socket socket = new Socket("localhost", 7005);
                     ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                     ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                    streamListener = new ClientStreamListener(out);
-                    streamHandler = new ClientStreamHandler(in);
+                    clientStreamListener = new ClientStreamListener(out);
+                    clientStreamHandler = new ClientStreamHandler(in);
                     //out.writeChar('P');
                     //out.flush();
                     //TODO hier write und flush(); noch weg
@@ -49,28 +62,42 @@ public class CLI_withTCPClient {
                     e.printStackTrace();
                 }
 
-                if (streamListener == null) {
+                if (clientStreamListener == null) {
                     throw new IllegalStateException("Stream Listener is null");
                 }
 
                 //Handler erstellen -> an diese den StreamListener als Argument übergeben
                 ProducerEventHandler addProducerHandler = new ProducerEventHandler();
-                addProducerHandler.add(streamListener);
+                addProducerHandler.add(clientStreamListener);
 
                 ProducerEventHandler deleteProducerHandler = new ProducerEventHandler();
-                deleteProducerHandler.add(streamListener);
+                deleteProducerHandler.add(clientStreamListener);
 
                 MediaEventHandler addMediaHandler = new MediaEventHandler();
-                addMediaHandler.add(streamListener);
+                addMediaHandler.add(clientStreamListener);
 
                 DeleteMediaEventHandler deleteMediaEventHandler = new DeleteMediaEventHandler();
-                deleteMediaEventHandler.add(streamListener);
+                deleteMediaEventHandler.add(clientStreamListener);
 
                 ChangeMediaEventHandler changeMediaEventHandler = new ChangeMediaEventHandler();
-                changeMediaEventHandler.add(streamListener);
+                changeMediaEventHandler.add(clientStreamListener);
+
+                SaveWithJOSEventHandler saveWithJOSEventHandler = new SaveWithJOSEventHandler();
+                saveWithJOSEventHandler.add(clientStreamListener);
+
+                LoadWithJOSEventHandler loadWithJOSEventHandler = new LoadWithJOSEventHandler();
+                loadWithJOSEventHandler.add(clientStreamListener);
+
+                //TODO SaveWithJBP Handler & LoadWithJBP Handler
 
                 ShowMediaListEventHandler showMediaListEventHandler = new ShowMediaListEventHandler();
-                showMediaListEventHandler.add(streamListener);
+                showMediaListEventHandler.add(clientStreamListener);
+
+                ShowTagsEventHandler showTagsEventHandler = new ShowTagsEventHandler();
+                showTagsEventHandler.add(clientStreamListener);
+
+                ShowProducerListEventHandler showProducerListEventHandler = new ShowProducerListEventHandler();
+                showProducerListEventHandler.add(clientStreamListener);
 
                 //Console handler übergeben
                 console.setAddProducerHandler(addProducerHandler);
@@ -78,13 +105,40 @@ public class CLI_withTCPClient {
                 console.setAddMediaHandler(addMediaHandler);
                 console.setDeleteMediaEventHandler(deleteMediaEventHandler);
                 console.setChangeMediaEventHandler(changeMediaEventHandler);
-                console.setShowMediaListEventHandler(showMediaListEventHandler);
 
-                //Rückweg Annahme von Server für show Media List:
-                MediaListEventListener mediaListListener = new MediaListListener(console);
-                MediaListEventHandler mediaEventHandler = new MediaListEventHandler();
-                streamHandler.setMediaListEventHandler(mediaEventHandler);
-                mediaEventHandler.add(mediaListListener);
+                console.setSaveWithJOSEventHandler(saveWithJOSEventHandler);
+                console.setLoadWithJOSEventHandler(loadWithJOSEventHandler);
+
+                console.setShowMediaListEventHandler(showMediaListEventHandler);
+                console.setShowTagsEventHandler(showTagsEventHandler);
+                console.setShowProducerListEventHandler(showProducerListEventHandler);
+
+                //Return way -> Answer from Server
+                //----------- Showing Media List
+                ShowingMediaListEventListener showingMediaListListener = new ShowingMediaListListener(console);
+                ShowingMediaListEventHandler showingMediaListEventHandler = new ShowingMediaListEventHandler();
+                showingMediaListEventHandler.add(showingMediaListListener);
+                clientStreamHandler.setShowingMediaListEventHandler(showingMediaListEventHandler);
+
+                //----------- Showing Producer List
+                ShowingProducerListEventListener showingProducerListListener = new ShowingProducerListListener(console);
+                ShowingProducerListEventHandler showingProducerListEventHandler = new ShowingProducerListEventHandler();
+                showingProducerListEventHandler.add(showingProducerListListener);
+                clientStreamHandler.setShowingProducerListEventHandler(showingProducerListEventHandler);
+
+                //----------- Showing Tags
+                ShowingTagsEventListener showingTagsListener = new ShowingTagsListener(console);
+                ShowingTagsEventHandler showingTagsEventHandler = new ShowingTagsEventHandler();
+                showingTagsEventHandler.add(showingTagsListener);
+                clientStreamHandler.setShowingTagsEventHandler(showingTagsEventHandler);
+
+                //----------- Loading with JOS
+                LoadingJOSEventListener loadingJOSListener = new LoadingJOSListener(console);
+                LoadingJOSEventHandler loadingJOSEventHandler = new LoadingJOSEventHandler();
+                loadingJOSEventHandler.add(loadingJOSListener);
+                clientStreamHandler.setLoadingJOSEventHandler(loadingJOSEventHandler);
+
+                //TODO ------------ Loading with JBP
 
                 while (true) {
                     console.execute();
@@ -92,63 +146,47 @@ public class CLI_withTCPClient {
             }
 
             if (args[0].equals("UDP")) {
-                //TODO hier UDP Client implementieren
+                //TODO implement UDP Client
             }
 
-            //case args[0] is not TCP or UDP it is capacity, so save instead of default capacity for use
-            //and start CLI with this new Capacity
-            try {
-                int newCapacity = Integer.parseInt(args[0]);
+            //case args[0] is not TCP nor UDP -> it is capacity
+            else {
+                //default int according to defaultCapacity set at beginning
+                int newCapacity = defaultCapacity.intValue();
+                try {
+                    //try to parse input to an int
+                    newCapacity = Integer.parseInt(args[0]);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                //any way initialize cli with default or set capacity
                 defaultCapacity = new BigDecimal(newCapacity);
                 startCLISetup(defaultCapacity);
-            } catch (NumberFormatException e) {
             }
         }
 
-        //case no arguments are given, start CLISetup with default capacity
-        if (args.length == 0) {
-            startCLISetup(defaultCapacity);
-        }
+
     }
 
 
     static void startCLISetup(BigDecimal capacity) {
-        //neue Console erzeugen (= im Schaubild: Controller)
+        //create console (= is controller in lecture diagram)
         ConsoleCLI console = new ConsoleCLI();
 
-        //GL erstellen mit default Parameter für capacity
+        //initialize GL with default parameter for capacity
         Administration administration = new AdministrationImpl(capacity);
 
-        //Listener richtung GL -> an diese als Argument Administration übergeben
+        //ONE WAY EVENTS -----------------------------------
+        //Listener to GL -> Argument Administration
         ProducerEventListener addProducerListener = new AddProducerListener(administration);
         ProducerEventListener deleteProducerListener = new DeleteProducerListener(administration);
         AddMediaListener addMediaListener = new AddMediaListener(administration);
         DeleteMediaListener deleteMediaListener = new DeleteMediaListener(administration);
         ChangeMediaListener changeMediaListener = new ChangeMediaListener(administration);
+        SaveWithJOSEventListener saveWithJOSListener = new SaveWithJOSListener(administration);
+        //TODO SaveWithJBPEventListener
 
-        //EVENT MIT RÜCKANTWORT -> MEDIALISTE HOLEN
-        //Handler und Listener mit Rückweg
-        //Handler für Hinweg
-        ShowMediaListEventHandler showMediaListEventHandler = new ShowMediaListEventHandler();
-
-        // Listener für Hinweg -> braucht handler für Rückweg:
-        // Handler für Rückweg
-        MediaListEventHandler mediaListEventHandler = new MediaListEventHandler();
-        //Listener für Hinweg
-        ShowMediaListEventListener showMediaListEventListener = new ShowMediaListListener(administration, mediaListEventHandler);
-
-        //Handler für Hinweg Listener übergeben
-        showMediaListEventHandler.add(showMediaListEventListener);
-
-        //Listener für Rückweg -> muss Console kennen
-        //(Listener Richtung Console -> an diese Console als Argument übergeben)
-        MediaListListener mediaListListener = new MediaListListener(console);
-
-        //Handler für Rückweg bekommt Listener für Rückweg, der auf Console ausgibt
-        mediaListEventHandler.add(mediaListListener);
-        //____________________________-ENDE EVENT MIT RÜCKANTWORT
-
-        //Handler erstellen -> an diese Listener als Argumente übergeben
+        //One Way Handler -> Argument Listener
         ProducerEventHandler addProducerHandler = new ProducerEventHandler();
         addProducerHandler.add(addProducerListener);
 
@@ -164,16 +202,73 @@ public class CLI_withTCPClient {
         ChangeMediaEventHandler changeMediaEventHandler = new ChangeMediaEventHandler();
         changeMediaEventHandler.add(changeMediaListener);
 
+        SaveWithJOSEventHandler saveWithJOSEventHandler = new SaveWithJOSEventHandler();
+        saveWithJOSEventHandler.add(saveWithJOSListener);
 
-        //Console handler übergeben
+        //TODO SaveWithJBP
+
+        //EVENTS WITH ANSWER ----------------------------------------
+        // EVENT -> Showing Media List -----------
+        // From GL -> return
+        ShowingMediaListEventHandler showingMediaListEventHandler = new ShowingMediaListEventHandler();
+        ShowingMediaListListener mediaListListener = new ShowingMediaListListener(console);
+        showingMediaListEventHandler.add(mediaListListener);
+        //To GL -> initial way
+        ShowMediaListEventHandler showMediaListEventHandler = new ShowMediaListEventHandler();
+        ShowMediaListEventListener showMediaListEventListener = new ShowMediaListListener(administration, showingMediaListEventHandler);
+        showMediaListEventHandler.add(showMediaListEventListener);
+        //____________________________ENDE Show Media List
+
+        //EVENT -> Showing Producer List -------------
+        //From GL
+        ShowingProducerListEventHandler showingProducerListEventHandler = new ShowingProducerListEventHandler();
+        ShowingProducerListListener showingProducerListListener = new ShowingProducerListListener(console);
+        showingProducerListEventHandler.add(showingProducerListListener);
+        //To GL
+        ShowProducerListEventHandler showProducerListEventHandler = new ShowProducerListEventHandler();
+        ShowProducerListEventListener showProducerListListener = new ShowProducerListListener(administration, showingProducerListEventHandler);
+        showProducerListEventHandler.add(showProducerListListener);
+        //---------------------------Ende Show Producer List
+
+        //EVENT -> Showing Tags -------------
+        //From GL
+        ShowingTagsEventHandler showingTagsEventHandler = new ShowingTagsEventHandler();
+        ShowingTagsListener showingTagsListener = new ShowingTagsListener(console);
+        showingTagsEventHandler.add(showingTagsListener);
+        //To GL
+        ShowTagsEventHandler showTagsEventHandler = new ShowTagsEventHandler();
+        ShowTagsEventListener showTagsListener = new ShowTagsListener(administration, showingTagsEventHandler);
+        showTagsEventHandler.add(showTagsListener);
+        //-------------------------- Ende Show Tags
+
+        //EVENT -> Loading with JOS --------------------
+        //From GL
+        LoadingJOSEventHandler loadingJOSEventHandler = new LoadingJOSEventHandler();
+        LoadingJOSEventListener loadingJOSListener = new LoadingJOSListener(console);
+        loadingJOSEventHandler.add(loadingJOSListener);
+        //To GL
+        LoadWithJOSEventHandler loadWithJOSEventHandler = new LoadWithJOSEventHandler();
+        LoadWithJOSEventListener loadWithJOSListener = new LoadWithJOSListener(administration, loadingJOSEventHandler);
+        loadWithJOSEventHandler.add(loadWithJOSListener);
+        //----------------ENDE JOS LADEN Config.
+
+        //Todo -> Loading with JBP
+
+        //console -> set handler for input handling
         console.setAddProducerHandler(addProducerHandler);
         console.setDeleteProducerHandler(deleteProducerHandler);
         console.setAddMediaHandler(addMediaHandler);
         console.setDeleteMediaEventHandler(deleteMediaEventHandler);
         console.setChangeMediaEventHandler(changeMediaEventHandler);
-        console.setShowMediaListEventHandler(showMediaListEventHandler);
 
-        //SizeObserver erstellen und admin übergeben
+        console.setShowMediaListEventHandler(showMediaListEventHandler);
+        console.setShowProducerListEventHandler(showProducerListEventHandler);
+        console.setShowTagsEventHandler(showTagsEventHandler);
+
+        console.setSaveWithJOSEventHandler(saveWithJOSEventHandler);
+        console.setLoadWithJOSEventHandler(loadWithJOSEventHandler);
+
+        //create observer -> Argument administration
         Observer sizeObserver = new SizeObserver((AdministrationImpl) administration);
         Observer tagObserver = new TagObserver((AdministrationImpl) administration);
 

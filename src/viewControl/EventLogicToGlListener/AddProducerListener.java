@@ -1,7 +1,7 @@
 package viewControl.EventLogicToGlListener;
 
-import EventSystem.ToGL.ProducerEvent;
-import EventSystem.ToGL.ProducerEventListener;
+import EventSystem.ToGL.EinfuegenUndLoeschenModus.ProducerEvent;
+import EventSystem.ToGL.EinfuegenUndLoeschenModus.ProducerEventListener;
 import administration.Administration;
 
 public class AddProducerListener implements ProducerEventListener {

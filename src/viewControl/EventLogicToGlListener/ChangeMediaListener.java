@@ -1,7 +1,7 @@
 package viewControl.EventLogicToGlListener;
 
-import EventSystem.ToGL.ChangeMediaEvent;
-import EventSystem.ToGL.ChangeMediaEventListener;
+import EventSystem.ToGL.AendernModus.ChangeMediaEvent;
+import EventSystem.ToGL.AendernModus.ChangeMediaEventListener;
 import administration.Administration;
 
 public class ChangeMediaListener implements ChangeMediaEventListener {

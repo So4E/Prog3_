@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static mediaDB.Tag.*;
 
-public class TagObserver implements Observer{
+public class TagObserver implements Observer {
     private AdministrationImpl observableAdmin;
     private Map<Tag, Integer> tagMap = new HashMap<>();
 
@@ -17,7 +17,7 @@ public class TagObserver implements Observer{
     public TagObserver(AdministrationImpl observableAdmin) {
         this.observableAdmin = observableAdmin;
         this.observableAdmin.meldeAn(this);
-        this.tagMap = this.observableAdmin.getUseOfTags();
+        this.tagMap = this.observableAdmin.getTagMap();
     }
 
     @Override
@@ -29,23 +29,58 @@ public class TagObserver implements Observer{
         int oldLifestyle = tagMap.get(Tag.Lifestyle);
         int oldNews = tagMap.get(Tag.News);
 
-        this.tagMap = this.observableAdmin.getUseOfTags();
+        this.tagMap = this.observableAdmin.getTagMap();
 
         int animal = tagMap.get(Animal);
         int tutorial = tagMap.get(Tag.Tutorial);
         int lifestyle = tagMap.get(Tag.Lifestyle);
         int news = tagMap.get(Tag.News);
 
-        for(Tag c : Tag.values()) {
-            if (animal > oldAnimal || tutorial > oldTutorial || lifestyle > oldLifestyle || news > oldNews) {
-                System.out.println("Tag Observer: Use of Tag " + c + " has increased since last check.");
-            }
-            if (animal < oldAnimal || tutorial < oldTutorial || lifestyle < oldLifestyle || news < oldNews) {
-                System.out.println("Tag Observer: Use of Tag " + c + " has decreased since last check.");
-            }
-            if (animal == oldAnimal) {
-                System.out.println("Tag Observer: No changes on Tag " + c + " times since last checked.");
-            }
+
+        if (animal > oldAnimal) {
+            System.out.println("Tag Observer: Use of Tag " + Animal + " has increased from " + oldAnimal
+                    + " to " + animal + ".");
+        }
+        if (animal < oldAnimal) {
+            System.out.println("Tag Observer: Use of Tag " + Animal + " has decreased from " + oldAnimal +
+                    " to: " + animal + ".");
+        }
+        if (animal == oldAnimal) {
+            System.out.println("Tag Observer: No changes on Tag " + Animal + " since last checked.");
+        }
+        if (tutorial > oldTutorial) {
+            System.out.println("Tag Observer: Use of Tag " + Tutorial + " has increased from " + oldTutorial
+                    + " to " + tutorial + ".");
+        }
+        if (tutorial < oldTutorial) {
+            System.out.println("Tag Observer: Use of Tag " + Tutorial +  " has decreased from " + oldTutorial +
+                    " to: " + tutorial + ".");
+        }
+        if (tutorial == oldTutorial) {
+            System.out.println("Tag Observer: No changes on Tag " + Tutorial + " times since last checked.");
+        }
+        if (lifestyle > oldLifestyle) {
+            System.out.println("Tag Observer: Use of Tag " + Lifestyle + " has increased from " + oldLifestyle
+                    + " to " + lifestyle + ".");
+        }
+        if (lifestyle < oldLifestyle) {
+            System.out.println("Tag Observer: Use of Tag " + Lifestyle +  " has decreased from " + oldLifestyle +
+                    " to: " + lifestyle + ".");
+        }
+        if (lifestyle == oldLifestyle) {
+            System.out.println("Tag Observer: No changes on Tag " + Lifestyle + " times since last checked.");
+        }
+        if (news > oldNews) {
+            System.out.println("Tag Observer: Use of Tag " + News + " has increased from " + oldNews
+                    + " to " + news + ".");
+        }
+        if (news < oldNews) {
+            System.out.println("Tag Observer: Use of Tag " + News + " has decreased from " + oldNews +
+                    " to: " + news + ".");
+        }
+        if (news == oldNews) {
+            System.out.println("Tag Observer: No changes on Tag " + News + " times since last checked.");
         }
     }
+
 }

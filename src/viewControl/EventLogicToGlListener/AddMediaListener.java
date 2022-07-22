@@ -1,7 +1,7 @@
 package viewControl.EventLogicToGlListener;
 
-import EventSystem.ToGL.MediaEvent;
-import EventSystem.ToGL.MediaEventListener;
+import EventSystem.ToGL.EinfuegenUndLoeschenModus.MediaEvent;
+import EventSystem.ToGL.EinfuegenUndLoeschenModus.MediaEventListener;
 import administration.Administration;
 
 public class AddMediaListener implements MediaEventListener {

@@ -1,5 +1,7 @@
 package utilities;
 
+import static java.lang.System.exit;
+
 public class CommandMode {
     public Modus modus;
     public String commandString;
@@ -31,6 +33,10 @@ public class CommandMode {
                 break;
             case ":p":
                 this.modus = Modus.PERSIST;
+                break;
+            case ":x":
+                System.err.println("Closing CLI.");
+                exit(0);
                 break;
             default:
                 this.defaultModeUsed = true;

@@ -1,3 +1,22 @@
+
+Anmerkungen zur Nutzung der Anwendung
+
+Hinweis zur Implementierung des Persistenzmodus:
+beim speichern im gui überschreibt man den speicher des cli und umgekehrt -> man kann also über beide
+zugänge an einer admin arbeiten
+
+
+
+
+
+
+
+
+
+
+
+
+
 Abgabe Übung 6
 
 TCP Server ist implementiert, TCP Server für mehrere Clients ist noch zu aktualisieren

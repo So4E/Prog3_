@@ -1,4 +1,4 @@
-package EventSystem.ToGL;
+package EventSystem.ToGL.AendernModus;
 
 import java.util.EventListener;
 

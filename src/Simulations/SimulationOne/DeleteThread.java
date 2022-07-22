@@ -15,10 +15,10 @@ public class DeleteThread extends Thread {
 
     public void run() {
         do {
-            if (admin.listMedia().size() > 0) {
+            if (admin.getMediaList().size() > 0) {
                 try {
-                    this.random = ThreadLocalRandom.current().nextInt(0, admin.listMedia().size() + 1);
-                    admin.deleteMedia(admin.listMedia().get(random).getAddress());
+                    this.random = ThreadLocalRandom.current().nextInt(0, admin.getMediaList().size() + 1);
+                    admin.deleteMedia(admin.getMediaList().get(random).getAddress());
                     System.out.println(this.getName() + ": " + this.toString() + ": Tried to delete media at index " + random);
                 } catch (IndexOutOfBoundsException e) {
                 }

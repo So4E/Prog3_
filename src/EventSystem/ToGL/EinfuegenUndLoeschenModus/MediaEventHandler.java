@@ -1,4 +1,4 @@
-package EventSystem.ToGL;
+package EventSystem.ToGL.EinfuegenUndLoeschenModus;
 
 import java.util.LinkedList;
 import java.util.List;

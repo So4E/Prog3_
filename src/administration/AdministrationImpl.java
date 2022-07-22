@@ -57,7 +57,7 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
     }
 
     @Override
-    public synchronized LinkedList<Uploader> listProducer() {
+    public synchronized LinkedList<Uploader> getProducerList() {
         return new LinkedList<>(this.producerList);
     }
 
@@ -74,7 +74,7 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
         else {
             for (int i = 0; i < mediaList.size(); i++) {
                 String sameName = mediaList.get(i).getUploader().getName();
-                if (sameName == name) {
+                if (sameName.equals(name)) {
                     //with delete method to make sure tags etc. are well persisted
                     this.deleteMedia(mediaList.get(i).getAddress());
                     i = i - 1;
@@ -181,12 +181,12 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
     }
 
     @Override
-    public synchronized LinkedList<Content> listMedia() {
+    public synchronized LinkedList<AllUploadables> getMediaList() {
         return new LinkedList<>(this.mediaList);
     }
 
     @Override
-    public synchronized LinkedList<Content> listMedia(String type) {
+    public synchronized LinkedList<Content> getMediaList(String type) {
         LinkedList<Content> thisTypeOfMediaList = new LinkedList<>();
         for (int i = 0; i < mediaList.size(); i++) {
             if (mediaList.get(i).toString().equals(type.toLowerCase())) {
@@ -235,8 +235,9 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
                 //count minus one in Map of used Tags for all Tags of this mediaFile
                 Collection<Tag> tags = thatObject.getTags();
                 if (!tags.isEmpty()) {
-                    for (int a = 0; a < tags.size(); a++) {
-                        for (Tag c : Tag.values()) {
+                    for (Tag c : Tag.values()) {
+                        //if tag is saved in object reduce count by 1
+                        if (tags.contains(c)) {
                             int actual = tagMap.get(c);
                             if (actual > 0) {
                                 tagMap.put(c, actual - 1);
@@ -256,7 +257,7 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
     }
 
     @Override
-    public synchronized Map<Tag, Integer> getUseOfTags() {
+    public synchronized Map<Tag, Integer> getTagMap() {
         return new HashMap<Tag, Integer>(this.tagMap);
     }
 

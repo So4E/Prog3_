@@ -23,10 +23,15 @@ public class SizeObserver implements Observer {
         if (Objects.equals(this.lastSize, newSize)) {
             return;
         }
+        //save last size as new size
+        this.lastSize = newSize;
         //check if currentSize is bigger than 90 % of maximum storage -> if it is, send warning
         double ninetyPercent = maximumSize.doubleValue() * 0.9;
-        if (ninetyPercent <= newSize.longValue()) {
-            System.out.println("Warning. Current size is more or equal to 90% of maximum storage.");
+        if (ninetyPercent > newSize.longValue()) return;
+        else {
+            System.out.println("Warning!!!!!!!!!!!!!!!\n " +
+                    "Current size is more than or equal to 90% of maximum storage.\n" +
+                    "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
     }
 

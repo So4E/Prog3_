@@ -22,8 +22,12 @@ public interface Administration {
      * method to get list of Uploader as return (name in capital letters)
      * @return LinkedList of all Uploaders added so far
      */
-    LinkedList<Uploader> listProducer();
+    LinkedList<Uploader> getProducerList();
 
+    /**
+     * method to get list of UploaderSupers
+     * @return LinkedList of all UploaderSupers
+     */
     LinkedList<UploaderSuper> listSuperProducer();
 
     /**
@@ -67,20 +71,20 @@ public interface Administration {
      * method to show saved MediaObjects
      * @return list of MediaObjects that will be generated as readable output in UI and CLI
      */
-    LinkedList<Content> listMedia();
+    LinkedList<AllUploadables> getMediaList();
 
     /**
      * method to return only media files from this type
      * @param type of mediafiles
      * @return list of mediafiles in database of this type
      */
-    LinkedList<Content> listMedia(String type);
+    LinkedList<Content> getMediaList(String type);
 
     /**
      * method to get all used tags and quantity of their usage
      * @return list of tag as key and integer value as count of how many times this tag was used
      */
-    Map<Tag, Integer> getUseOfTags();
+    Map<Tag, Integer> getTagMap();
 
     /**
      * method to get all used Tags from admin
