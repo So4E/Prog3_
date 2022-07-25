@@ -1,9 +1,12 @@
 package EventSystem.ToGL.AendernModus;
 
+import Logging.EventType;
+
 import java.util.EventObject;
 
 public class ChangeMediaEvent extends EventObject {
     private String address;
+    private EventType eventType = EventType.changemediaevent;
 
     /**
      * Constructs a prototypical Event.
@@ -18,4 +21,8 @@ public class ChangeMediaEvent extends EventObject {
 
     public String getAddress() { return this.address; }
 
+    public EventType getEventType(){return this.eventType;}
+
+    @Override
+    public String toString(){ return "ChangeMediaEvent";}
 }

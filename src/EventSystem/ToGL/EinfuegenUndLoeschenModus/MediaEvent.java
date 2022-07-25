@@ -1,5 +1,6 @@
 package EventSystem.ToGL.EinfuegenUndLoeschenModus;
 
+import Logging.EventType;
 import mediaDB.Tag;
 
 import java.io.Serializable;
@@ -9,12 +10,14 @@ import java.util.EventObject;
 import java.util.LinkedList;
 
 public class MediaEvent extends EventObject implements Serializable {
-    String mediaType;
-    String nameOfProducer;
-    LinkedList<Tag> tags;
-    BigDecimal bitrate;
-    Duration length;
-    String optionaleParameter;
+    private String mediaType;
+    private String nameOfProducer;
+    private LinkedList<Tag> tags;
+    private BigDecimal bitrate;
+    private Duration length;
+    private String optionaleParameter;
+    private EventType eventType = EventType.mediaevent;
+
 
     /**
      * Constructs a prototypical Event.
@@ -32,6 +35,7 @@ public class MediaEvent extends EventObject implements Serializable {
         this.bitrate = bitrate;
         this.length = length;
         this.optionaleParameter = optionaleParameter;
+
     }
 
     public String getMediaType() {
@@ -57,4 +61,9 @@ public class MediaEvent extends EventObject implements Serializable {
     public String getOptionaleParameter() {
         return optionaleParameter;
     }
+    public EventType getEventType(){return this.eventType;}
+
+
+    @Override
+    public String toString(){ return "MediaEvent";}
 }
