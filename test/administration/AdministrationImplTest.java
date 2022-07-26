@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import static mediaDB.Tag.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class AdministrationImplTest {
     LinkedList<Tag> collection = new LinkedList<>();
@@ -559,7 +560,7 @@ class AdministrationImplTest {
     /////////////////////////////////////////////////////////////////////////////
     //---------------------MOCKITO TESTS ----------------------------
 
-   /* @Test
+   @Test
     void addMockedMediaFileGood(){
         UploaderImpl mockProducer = mock(UploaderImpl.class);
         when(mockProducer.getName()).thenReturn("Anton");
@@ -569,33 +570,63 @@ class AdministrationImplTest {
         boolean expected = true;
         boolean actual = testAdmin.addProducer(mockProducer.getName());
         assertEquals(expected, actual);
-    }*/
+    }
 
     @Test
-    void meldeAnObserverUnconventionalTestingMethod() {
+    void whenFileAddedCheckedWhetherProducerWithThisNameWasAlreadySavedBefore(){
+        UploaderImpl mockProducer = mock(UploaderImpl.class);
+        when(mockProducer.getName()).thenReturn("Anton");
+
         AdministrationImpl testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
-        Observer testObserver = new SizeObserver(testAdmin);
+        testAdmin.addProducer(mockProducer.getName());
+        testAdmin.addMedia("AudioVideo", "Anton", collection, BigDecimal.valueOf(50),
+                Duration.ofMinutes(5), "139 108");
+
+        verify(mockProducer,times(1)).getName();
+        verify(mockProducer,never()).getMediaCount();
+        verifyNoMoreInteractions(mockProducer);
+        assertTrue(mockProducer.mediaCount == 0);
+    }
+
+    @Test
+    void meldeAnObserver() {
+        AdministrationImpl testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        Observer testObserver = mock(SizeObserver.class);
+        testAdmin.meldeAn(testObserver);
 
         testAdmin.addProducer("JZ");
         collection.add(Tutorial);
         testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(50),
                 Duration.ofMinutes(5), "139 108");
-        testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(45),
+        verify(testObserver).aktualisiere();
+    }
+
+    @Test
+    void meldeAb() {
+        AdministrationImpl testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        Observer testObserver = mock(SizeObserver.class);
+        testAdmin.meldeAn(testObserver);
+
+        testAdmin.addProducer("JZ");
+        collection.add(Tutorial);
+        testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(50),
                 Duration.ofMinutes(5), "139 108");
-        //observer at this point sends warning that capacity is more or equal to 90% of max storage
-        //delete last media and medeAb(testObserver)
-        testAdmin.deleteMedia(testAdmin.getMediaList().getLast().getAddress());
+        verify(testObserver).aktualisiere();
+
         testAdmin.meldeAb(testObserver);
-
-        //adding second media again to see whether observer still is called when changes happen
-        testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(45),
+        testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(50),
                 Duration.ofMinutes(5), "139 108");
+        verifyNoMoreInteractions(testObserver);
+    }
 
-        //no printout here
-        System.out.println("\n \n Medium added - but no reaction from observer");
-        System.out.println(" now calling aktualisiere() on observer" + "\n and waiting for print out..\n");
-        testObserver.aktualisiere();
+    @Test
+    void benachrichtige() {
+        AdministrationImpl testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        Observer testObserver = mock(SizeObserver.class);
+        testAdmin.meldeAn(testObserver);
 
+        testAdmin.benachrichtige();
+        verify(testObserver).aktualisiere();
     }
 
 }

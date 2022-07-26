@@ -150,7 +150,7 @@ public class CLI_withTCPClient {
                 //TODO implement UDP Client
             }
 
-            if(args[0].equals("DT") || args[0].equals("EN")){
+            if(args[0].equals("DE") || args[0].equals("EN")){
                 String language = args[0];
                 //initialize cli with default capacity and language for logging
                 startCLISetupWithLog(defaultCapacity, language);
@@ -282,12 +282,14 @@ public class CLI_withTCPClient {
     }
 
     static void startCLISetupWithLog(BigDecimal capacity, String language) {
-        Logger logger = Logger.getLogger(language);
         //create console (= is controller in lecture diagram)
         ConsoleCLI console = new ConsoleCLI();
 
         //initialize GL with default parameter for capacity
         Administration administration = new AdministrationImpl(capacity);
+
+        //get Logger
+        Logger logger = Logger.getLogger(language, (AdministrationImpl)administration);
 
         //ONE WAY EVENTS -----------------------------------
         //Listener to GL -> Argument Administration
@@ -391,7 +393,6 @@ public class CLI_withTCPClient {
         console.setSaveWithJOSEventHandler(saveWithJOSEventHandler);
         console.setLoadWithJOSEventHandler(loadWithJOSEventHandler);
 
-        //TODO - hier boolean an sizeObserver, ob geloggt oder nich tübergeben?
         //create observer -> Argument administration
         Observer sizeObserver = new SizeObserver((AdministrationImpl) administration);
         Observer tagObserver = new TagObserver((AdministrationImpl) administration);

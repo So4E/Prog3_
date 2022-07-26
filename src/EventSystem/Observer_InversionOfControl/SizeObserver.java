@@ -29,6 +29,7 @@ public class SizeObserver implements Observer {
         double ninetyPercent = maximumSize.doubleValue() * 0.9;
         if (ninetyPercent > newSize.longValue()) return;
         else {
+            //this should ideally be an outputstream, not direct sys.out
             System.out.println("Warning!!!!!!!!!!!!!!!\n " +
                     "Current size is more than or equal to 90% of maximum storage.\n" +
                     "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");

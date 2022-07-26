@@ -198,7 +198,8 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
                                     }
                                     break;
                                 }
-                            } else {
+                            }
+                            else {
                                 System.out.println("No valid input. Please try again.");
                             }
                             break;
@@ -208,7 +209,7 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
                                 changeMode(input);
                                 break;
                             }
-                            System.out.println("Updating" + input);
+                            System.out.println("Updating " + input);
                             ChangeMediaEvent changeMediaEvent = new ChangeMediaEvent(this, input);
                             if (null != this.changeMediaEventHandler) {
                                 changeMediaEventHandler.handle(changeMediaEvent);
@@ -226,25 +227,30 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
                                 if (null != this.saveWithJOSEventHandler) {
                                     saveWithJOSEventHandler.handle(saveJOS);
                                 }
+                                break;
                             }
 
                             //TODO persist fertig implementieren
                             if (input.equals("saveJBP")) {
                                 System.out.println("Service currently not available.");
+                                break;
                             }
 
                             if (input.equals("loadJOS")) {
                                 System.out.println("Service currently not available.");
+                                break;
                             }
 
                             if (input.equals("loadJBP")) {
                                 System.out.println("Service currently not available.");
+                                break;
                             } else {
                                 System.out.println("No valid input. Please try again.");
                                 break;
                             }
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     System.out.println("There was a mistake. Please try again.");
                 }
             } while (true);

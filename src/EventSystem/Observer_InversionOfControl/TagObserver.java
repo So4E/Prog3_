@@ -4,7 +4,6 @@ import administration.AdministrationImpl;
 import mediaDB.Tag;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 import static mediaDB.Tag.*;
@@ -22,8 +21,6 @@ public class TagObserver implements Observer {
 
     @Override
     public void aktualisiere() {
-        LinkedList<Tag> usedTags = new LinkedList<>();
-
         int oldAnimal = tagMap.get(Animal);
         int oldTutorial = tagMap.get(Tag.Tutorial);
         int oldLifestyle = tagMap.get(Tag.Lifestyle);
@@ -36,7 +33,7 @@ public class TagObserver implements Observer {
         int lifestyle = tagMap.get(Tag.Lifestyle);
         int news = tagMap.get(Tag.News);
 
-
+        //ideally this sys.out should be outputstream to console, which will print out, change if there's still time
         if (animal > oldAnimal) {
             System.out.println("Tag Observer: Use of Tag " + Animal + " has increased from " + oldAnimal
                     + " to " + animal + ".");
