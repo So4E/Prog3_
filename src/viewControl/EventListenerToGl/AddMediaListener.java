@@ -1,4 +1,4 @@
-package viewControl.EventLogicToGlListener;
+package viewControl.EventListenerToGl;
 
 import EventSystem.ToGL.EinfuegenUndLoeschenModus.MediaEvent;
 import EventSystem.ToGL.EinfuegenUndLoeschenModus.MediaEventListener;
@@ -15,6 +15,5 @@ public class AddMediaListener implements MediaEventListener {
     public void onMediaEvent(MediaEvent event) {
         this.administration.addMedia(event.getMediaType(), event.getNameOfProducer(), event.getTags(), event.getBitrate(),
              event.getLength(), event.getOptionaleParameter());
-
     }
 }

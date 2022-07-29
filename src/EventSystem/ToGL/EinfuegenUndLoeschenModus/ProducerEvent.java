@@ -6,7 +6,7 @@ import java.util.EventObject;
 
 public class ProducerEvent extends EventObject{
     private String name;
-    boolean addOrDelete;
+    boolean addOrDelete; //add=true, delete=false
     private EventType eventType = EventType.producerevent;
 
     public ProducerEvent(Object source, String name, boolean addOrDelete) {

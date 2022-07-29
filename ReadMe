@@ -2,70 +2,22 @@
 Anmerkungen zur Nutzung der Anwendung
 
 Hinweis zur Implementierung des Persistenzmodus:
-beim speichern im gui überschreibt man den speicher des cli und umgekehrt -> man kann also über beide
-zugänge an einer admin arbeiten
+- beim Speichern im GUI überschreibt man den Speicher des CLI und umgekehrt -> man kann also über beide
+Zugänge an einer Datenbank arbeiten
 
 
 
 
+Für Abgabe verwendete Quellen:
+Ressource Bundles: https://www.java-blog-buch.de/d-mehrsprachigkeit-mit-bundles-in-java/
+Anzeige der Werte in der GUI Tabelle: https://docs.oracle.com/javase/8/javafx/api/javafx/collections/ObservableList.html
+Angeklickte Objekte (GUI) nutzen: https://jenkov.com/tutorials/javafx/tableview.html#:~:text=It%20is%20possible%20to%20select,the%20select(int)%20method.
+JBP: NonBeanItem Big Decimal und Date: http://www.java2s.com/example/java-api/java/beans/xmlencoder/setpersistencedelegate-2-0.html
 
 
 
 
-
-
-
-
-
-Abgabe Übung 6
-
-TCP Server ist implementiert, TCP Server für mehrere Clients ist noch zu aktualisieren
-Client implementiert
-Einfügen von Producern sollte tun
-Anzeigen von MediaListe fast ausimplementiert (bis auf Anzeige sollte Weg da sein)
-
-
-
-
-
-Abgabe Übung 5
-
-1. SpeichernundLadenderGeschäftslogikmitJOSundJBP --> JOS läuft, JBP findet drei Methoden nicht..
-(2. Stellvertreter-Tests für das Lesen und Schreiben aus/in Streams)
-3. Architekturdiagramm ---> hier im Projekt im Default Ordner
-empfohlene Realisierungen ohne Relevanz für den Beleg
-4. Abgabe als Gradle-Projekt
-5. Anbindung an privates git-Repo ---> done
-
-Quelle für NonBeanItem Big Decimal und Date: http://www.java2s.com/example/java-api/java/beans/xmlencoder/setpersistencedelegate-2-0.html
-
-Abgabe Übung 4:
-
-1. Auflistungen sind immer sichtbar und werden automatisch aktualisiert - done
-2. sortierbare Darstellung der Mediadateien mit Abrufadresse, Anzahl der
-Abrufe, Produzent und Upload-Datum -> produzent und upload datum fehlt noch -> kommt wenn linkedList in admin
-neu geordnet mit superKlasse, die alle getter der mediaDB vereint
-3. skalierbareDarstellung -> done -> war falsch, nun gefixed
-4. FXML & data binding verwendet -> done
-5. Änderung der Abrufadresse mittels drag&drop - fehlt noch
-
-Quellen:
-- anzeige der Werte in der Tabelle: https://docs.oracle.com/javase/8/javafx/api/javafx/collections/ObservableList.html
-- angeklickte Objekte nutzen: https://jenkov.com/tutorials/javafx/tableview.html#:~:text=It%20is%20possible%20to%20select,the%20select(int)%20method.
-
-Checkliste:
-
-zusätzlich erfüllte Anforderungen:
-- [ ] keine Verwendung von Thread.sleep o.Ä. bzw. nur mit 0-Werten
-- [ ] ändernde Aktionen der threads produzieren Ausgaben auf der Konsole
-- [ ] Änderungen an der Geschäftslogik produzieren Ausgaben auf der Konsole
-
-#Allgemeine Fragen:
-komplette Geschäftslogik implementiert (bis auf optionaleParameter aufsplitten und default Werte vergeben).
--> Testabdeckung ausreichend?
-
-- UE 2 wg sys.out.printl nicht bestanden
--> nun entfernt und über beobachter realisiert -> OKAY so?
+________ALTE ANMERKUNGEN________
 
 #Abgabe Übung 3:
 
@@ -78,86 +30,3 @@ Simulation 2:
 
 - modified delete thread -> darf dieser und noch zu implementierender ModifiedAddThread je auch das
     interface Observer implementieren, sodass sich beide gegenseitig benachrichtigen, wenn sie fertig sind?
-
-
-
-__________________ALTE ANMERKUNGEN
-Abgabe Übung 2: Anmerkungen:
-
-Bei CLI_withTCPClient kann der User entweder die Größe der Datenbank (capacity),
-    TCP oder UDP, oder nichts angeben
-
-Anlegen neuer audiovideo oder audio datei ist möglich über Console - Beispiel:
-
-wähle:
-:c
-lege Produzenten an:
-Otto
-lege neue audiovideo an:
-audiovideo Otto , 20 20 20 20
-
-Beobachter für 90% der Kapazität ist angelegt.
-
-Zweiter Beobachter für Tags ist noch anzulegen.
-
-
-
-
-
-
-
-
-
-
-
-
-Softwareanforderung (erfüllt):
-- Java8 language level
-- JUnit 5 und Mockito als Testframeworks
-
-Bewertungsschema (erfüllt):
-• zip Archiv
-• IntelliJ-Projekt (kein Gradle, Maven o.ä.)
-• kompilierbar und ausführbar
-• Trennung zwischen Test- und Produktiv-Code
-
-check:
-• main-Methoden nur im default package (wo ist das default package?)
-
-
-Uebung 2 -------------------------------------
-
-1 Punkt (zusätzlich zu Bewertungsschema zu erfüllen:)
-• Darstellungslogik und Geschäftslogik getrennt
-• prototypisches EventSystem.infastructureOLDEVENTS (nicht notwendig, wenn umfangreicheres EventSystem.infastructureOLDEVENTS realisiert
-ist)
-
-empfohlene Realisierungen als Vorbereitung auf den Beleg
-1. event-System realisiert
-2. Beobachter realisiert
-3. Auflistender Mediadateien im EventSystem.infastructureOLDEVENTS realisiert
-4. zwei Tests für Beobachter realisiert
-5. zwei listener getestet
-6. angemessene Aufzählungstypen verwendet
-7. nach MVC strukturiert
-8. vollständiger Befehlssatz
-
-
-
-
-Uebung 1
-
-1 Punkt ----------> erfüllt
-• CRUD für Mediadateien
-• mindestens ein Test
-
-empfohlene Realisierungen als Vorbereitung auf den Beleg (nicht eingerückt = Todo)
-    1. Trennung zwischen Test- und Produktiv-Code
-    2. JUnit5 als Testframework
-    3. Mockito als Mock/Spy-framework
-    4. mindestens je ein Test für CRUD
-5. mindestens zwei Tests mit Mockito
-6. Einfügen der Mediadateien vollständig getestet (mindestens 8 Testfälle)
-    7. Unterstützung von mindestens zwei Typen von Mediadateien
-8. vollständige GL
-9. keine Code-Duplikate

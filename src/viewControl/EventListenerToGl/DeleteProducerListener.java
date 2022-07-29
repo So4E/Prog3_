@@ -1,4 +1,4 @@
-package viewControl.EventLogicToGlListener;
+package viewControl.EventListenerToGl;
 
 import EventSystem.ToGL.EinfuegenUndLoeschenModus.ProducerEvent;
 import EventSystem.ToGL.EinfuegenUndLoeschenModus.ProducerEventListener;
@@ -11,6 +11,8 @@ public class DeleteProducerListener implements ProducerEventListener {
 
     @Override
     public void onProducerEvent(ProducerEvent event) {
-        this.administration.deleteProducer(event.getName());
+        if(!event.getAddOrDelete()) {
+            this.administration.deleteProducer(event.getName());
+        }
     }
 }

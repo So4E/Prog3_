@@ -1,6 +1,5 @@
 package administration;
 
-import mediaDB.Content;
 import mediaDB.Tag;
 import mediaDB.Uploader;
 
@@ -78,7 +77,7 @@ public interface Administration {
      * @param type of mediafiles
      * @return list of mediafiles in database of this type
      */
-    LinkedList<Content> getMediaList(String type);
+    LinkedList<AllUploadables> getMediaList(String type);
 
     /**
      * method to get all used tags and quantity of their usage

@@ -1,4 +1,4 @@
-package viewControl.EventLogicToGlListener;
+package viewControl.EventListenerToGl;
 
 import EventSystem.ToGL.AendernModus.ChangeMediaEvent;
 import EventSystem.ToGL.AendernModus.ChangeMediaEventListener;

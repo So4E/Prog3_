@@ -1,4 +1,7 @@
 import EventSystem.FromGL.*;
+import EventSystem.Observer_InversionOfControl.Observer;
+import EventSystem.Observer_InversionOfControl.SizeObserver;
+import EventSystem.Observer_InversionOfControl.TagObserver;
 import EventSystem.ToGL.AendernModus.ChangeMediaEventHandler;
 import EventSystem.ToGL.Anzeigenmodus.*;
 import EventSystem.ToGL.EinfuegenUndLoeschenModus.DeleteMediaEventHandler;
@@ -11,18 +14,15 @@ import EventSystem.ToGL.Persistenzmodus.SaveWithJOSEventHandler;
 import EventSystem.ToGL.Persistenzmodus.SaveWithJOSEventListener;
 import Logging.Logger;
 import ReturnFromGlListener.LoadingJOSListener;
+import ReturnFromGlListener.ShowingMediaListListener;
 import ReturnFromGlListener.ShowingProducerListListener;
 import ReturnFromGlListener.ShowingTagsListener;
 import TCP_Client_Server_ListenerAndHandler.ClientStreamHandler;
 import TCP_Client_Server_ListenerAndHandler.ClientStreamListener;
-import EventSystem.Observer_InversionOfControl.Observer;
-import EventSystem.Observer_InversionOfControl.SizeObserver;
-import EventSystem.Observer_InversionOfControl.TagObserver;
-import administration.Administration;
 import administration.AdministrationImpl;
 import viewControl.ConsoleCLI;
-import ReturnFromGlListener.ShowingMediaListListener;
-import viewControl.EventLogicToGlListener.*;
+import viewControl.ConsoleCLIWithTCP;
+import viewControl.EventListenerToGl.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -45,19 +45,16 @@ public class CLI_withTCPClient {
         if (args.length > 0) {
             //args auslesen: capacity oder TCP/UDP = args[0]
             if (args[0].equals("TCP")) {
-                ConsoleCLI console = new ConsoleCLI();
                 ClientStreamListener clientStreamListener = null;
                 ClientStreamHandler clientStreamHandler = null;
+                ObjectInputStream in = null;
 
                 try {
                     Socket socket = new Socket("localhost", 7005);
                     ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                    ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                    in = new ObjectInputStream(socket.getInputStream());
                     clientStreamListener = new ClientStreamListener(out);
                     clientStreamHandler = new ClientStreamHandler(in);
-                    //out.writeChar('P');
-                    //out.flush();
-                    //TODO hier write und flush(); noch weg
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -66,6 +63,8 @@ public class CLI_withTCPClient {
                 if (clientStreamListener == null) {
                     throw new IllegalStateException("Stream Listener is null");
                 }
+
+                ConsoleCLIWithTCP console = new ConsoleCLIWithTCP(clientStreamHandler, in);
 
                 //Handler erstellen -> an diese den StreamListener als Argument übergeben
                 ProducerEventHandler addProducerHandler = new ProducerEventHandler();
@@ -141,9 +140,8 @@ public class CLI_withTCPClient {
 
                 //TODO ------------ Loading with JBP
 
-                while (true) {
-                    console.execute();
-                }
+
+                console.execute();
             }
 
             if (args[0].equals("UDP")) {
@@ -152,6 +150,14 @@ public class CLI_withTCPClient {
 
             if(args[0].equals("DE") || args[0].equals("EN")){
                 String language = args[0];
+                //check if additional capacity is given and use if it is there to initialize
+                int newCapacity = defaultCapacity.intValue();
+                try {
+                    newCapacity = Integer.parseInt(args[0]);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                defaultCapacity = new BigDecimal(newCapacity);
                 //initialize cli with default capacity and language for logging
                 startCLISetupWithLog(defaultCapacity, language);
             }
@@ -180,7 +186,7 @@ public class CLI_withTCPClient {
         ConsoleCLI console = new ConsoleCLI();
 
         //initialize GL with default parameter for capacity
-        Administration administration = new AdministrationImpl(capacity);
+        AdministrationImpl administration = new AdministrationImpl(capacity);
 
         //ONE WAY EVENTS -----------------------------------
         //Listener to GL -> Argument Administration
@@ -275,8 +281,8 @@ public class CLI_withTCPClient {
         console.setLoadWithJOSEventHandler(loadWithJOSEventHandler);
 
         //create observer -> Argument administration
-        Observer sizeObserver = new SizeObserver((AdministrationImpl) administration);
-        Observer tagObserver = new TagObserver((AdministrationImpl) administration);
+        Observer sizeObserver = new SizeObserver(administration, System.out);
+        Observer tagObserver = new TagObserver(administration);
 
         console.execute();
     }
@@ -286,10 +292,10 @@ public class CLI_withTCPClient {
         ConsoleCLI console = new ConsoleCLI();
 
         //initialize GL with default parameter for capacity
-        Administration administration = new AdministrationImpl(capacity);
+        AdministrationImpl administration = new AdministrationImpl(capacity);
 
         //get Logger
-        Logger logger = Logger.getLogger(language, (AdministrationImpl)administration);
+        Logger logger = Logger.getLogger(language, administration);
 
         //ONE WAY EVENTS -----------------------------------
         //Listener to GL -> Argument Administration
@@ -394,8 +400,8 @@ public class CLI_withTCPClient {
         console.setLoadWithJOSEventHandler(loadWithJOSEventHandler);
 
         //create observer -> Argument administration
-        Observer sizeObserver = new SizeObserver((AdministrationImpl) administration);
-        Observer tagObserver = new TagObserver((AdministrationImpl) administration);
+        Observer sizeObserver = new SizeObserver(administration, System.out);
+        Observer tagObserver = new TagObserver(administration);
 
         console.execute();
     }

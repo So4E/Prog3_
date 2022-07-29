@@ -6,6 +6,7 @@ import Simulations.SimulationOne.AddThread;
 import Simulations.SimulationOne.DeleteThread;
 import administration.AdministrationImpl;
 
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -59,7 +60,8 @@ public class SimulationOneMain {
         simulationOneThreads.add(adding);
         simulationOneThreads.add(deleting);
 
-        Observer sizeObserver = new SizeObserver(newAdmin);
+        PrintStream printStream = System.out;
+        Observer sizeObserver = new SizeObserver(newAdmin, printStream);
         Observer tagObserver = new TagObserver(newAdmin);
         Observer addOrDeleteObserver = new AddOrDeleteObserverImpl(newAdmin);
 

@@ -42,9 +42,6 @@ public class TagObserver implements Observer {
             System.out.println("Tag Observer: Use of Tag " + Animal + " has decreased from " + oldAnimal +
                     " to: " + animal + ".");
         }
-        if (animal == oldAnimal) {
-            System.out.println("Tag Observer: No changes on Tag " + Animal + " since last checked.");
-        }
         if (tutorial > oldTutorial) {
             System.out.println("Tag Observer: Use of Tag " + Tutorial + " has increased from " + oldTutorial
                     + " to " + tutorial + ".");
@@ -52,9 +49,6 @@ public class TagObserver implements Observer {
         if (tutorial < oldTutorial) {
             System.out.println("Tag Observer: Use of Tag " + Tutorial +  " has decreased from " + oldTutorial +
                     " to: " + tutorial + ".");
-        }
-        if (tutorial == oldTutorial) {
-            System.out.println("Tag Observer: No changes on Tag " + Tutorial + " times since last checked.");
         }
         if (lifestyle > oldLifestyle) {
             System.out.println("Tag Observer: Use of Tag " + Lifestyle + " has increased from " + oldLifestyle
@@ -64,9 +58,6 @@ public class TagObserver implements Observer {
             System.out.println("Tag Observer: Use of Tag " + Lifestyle +  " has decreased from " + oldLifestyle +
                     " to: " + lifestyle + ".");
         }
-        if (lifestyle == oldLifestyle) {
-            System.out.println("Tag Observer: No changes on Tag " + Lifestyle + " times since last checked.");
-        }
         if (news > oldNews) {
             System.out.println("Tag Observer: Use of Tag " + News + " has increased from " + oldNews
                     + " to " + news + ".");
@@ -74,9 +65,6 @@ public class TagObserver implements Observer {
         if (news < oldNews) {
             System.out.println("Tag Observer: Use of Tag " + News + " has decreased from " + oldNews +
                     " to: " + news + ".");
-        }
-        if (news == oldNews) {
-            System.out.println("Tag Observer: No changes on Tag " + News + " times since last checked.");
         }
     }
 

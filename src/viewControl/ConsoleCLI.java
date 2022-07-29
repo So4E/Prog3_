@@ -18,6 +18,7 @@ import utilities.Modus;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.LinkedList;
+import java.util.MissingResourceException;
 import java.util.Scanner;
 
 import static administration.Mediatype.*;
@@ -45,8 +46,13 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
                     switch (modus) {
                         //START mode is used to set first operation mode; initialized in constructor
                         case START:
-                            if (input.charAt(0) == ':') {
-                                changeMode(input);
+                            try {
+                                if (input.charAt(0) == ':') {
+                                    changeMode(input);
+                                    break;
+                                }
+                            } catch (StringIndexOutOfBoundsException indexOutOfBoundsException) {
+                                System.out.println("No valid input. Please try again.");
                                 break;
                             }
                             System.out.println("Please enter mode first.");
@@ -54,8 +60,13 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
 
                         case INSERT:
                             //if input starts with : it should be a new mode, so set this mode and move on
-                            if (input.charAt(0) == ':') {
-                                changeMode(input);
+                            try {
+                                if (input.charAt(0) == ':') {
+                                    changeMode(input);
+                                    break;
+                                }
+                            } catch (StringIndexOutOfBoundsException indexOutOfBoundsException) {
+                                System.out.println("No valid input. Please try again.");
                                 break;
                             }
                             if (input.equalsIgnoreCase(audiovideo.toString()) || input.equalsIgnoreCase(audio.toString()) ||
@@ -116,8 +127,13 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
                             }
 
                         case DELETE:
-                            if (input.charAt(0) == ':') {
-                                changeMode(input);
+                            try {
+                                if (input.charAt(0) == ':') {
+                                    changeMode(input);
+                                    break;
+                                }
+                            } catch (StringIndexOutOfBoundsException indexOutOfBoundsException) {
+                                System.out.println("No valid input. Please try again.");
                                 break;
                             }
                             //not important to know whether user or mediafile should be deleted
@@ -136,8 +152,13 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
                             break;
 
                         case READ:
-                            if (input.charAt(0) == ':') {
-                                changeMode(input);
+                            try {
+                                if (input.charAt(0) == ':') {
+                                    changeMode(input);
+                                    break;
+                                }
+                            } catch (StringIndexOutOfBoundsException indexOutOfBoundsException) {
+                                System.out.println("No valid input. Please try again.");
                                 break;
                             }
 
@@ -198,15 +219,19 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
                                     }
                                     break;
                                 }
-                            }
-                            else {
+                            } else {
                                 System.out.println("No valid input. Please try again.");
                             }
                             break;
 
                         case UPDATE:
-                            if (input.charAt(0) == ':') {
-                                changeMode(input);
+                            try {
+                                if (input.charAt(0) == ':') {
+                                    changeMode(input);
+                                    break;
+                                }
+                            } catch (StringIndexOutOfBoundsException indexOutOfBoundsException) {
+                                System.out.println("No valid input. Please try again.");
                                 break;
                             }
                             System.out.println("Updating " + input);
@@ -217,8 +242,13 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
                             break;
 
                         case PERSIST:
-                            if (input.charAt(0) == ':') {
-                                changeMode(input);
+                            try {
+                                if (input.charAt(0) == ':') {
+                                    changeMode(input);
+                                    break;
+                                }
+                            } catch (StringIndexOutOfBoundsException indexOutOfBoundsException) {
+                                System.out.println("No valid input. Please try again.");
                                 break;
                             }
 
@@ -226,6 +256,7 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
                                 SaveWithJOSEvent saveJOS = new SaveWithJOSEvent(this);
                                 if (null != this.saveWithJOSEventHandler) {
                                     saveWithJOSEventHandler.handle(saveJOS);
+                                    System.out.println("Saving with JOS.");
                                 }
                                 break;
                             }
@@ -249,6 +280,10 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
                                 break;
                             }
                     }
+                } catch (MissingResourceException missingResourceException) {
+                    System.out.println("Warning. The language you chose has not been fully implemented." +
+                            "\n This might cause problems with using the database." +
+                            "\n Please restart CLI with parameter [DE] to have full access to logging.");
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println("There was a mistake. Please try again.");

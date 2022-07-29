@@ -186,8 +186,8 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
     }
 
     @Override
-    public synchronized LinkedList<Content> getMediaList(String type) {
-        LinkedList<Content> thisTypeOfMediaList = new LinkedList<>();
+    public synchronized LinkedList<AllUploadables> getMediaList(String type) {
+        LinkedList<AllUploadables> thisTypeOfMediaList = new LinkedList<>();
         for (int i = 0; i < mediaList.size(); i++) {
             if (mediaList.get(i).toString().equals(type.toLowerCase())) {
                 thisTypeOfMediaList.add(mediaList.get(i));

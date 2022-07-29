@@ -3,6 +3,7 @@ package administration;
 import EventSystem.Observer_InversionOfControl.Observer;
 import EventSystem.Observer_InversionOfControl.SizeObserver;
 import mediaDB.Tag;
+import mediaDB.Uploader;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -133,6 +134,20 @@ class AdministrationImplTest {
 
         boolean expected = false;
         boolean actual = testAdmin.deleteProducer("Horst");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void sizeOfProducerListIncreasedByOneWhenAddingProducer() {
+        AdministrationImpl testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        Uploader uploader = mock(UploaderImpl.class);
+        int producerlistSize = testAdmin.getProducerList().size();
+
+        testAdmin.addProducer(uploader.getName());
+
+        int actual = testAdmin.getProducerList().size();
+        int expected = producerlistSize + 1;
 
         assertEquals(expected, actual);
     }
@@ -561,31 +576,16 @@ class AdministrationImplTest {
     //---------------------MOCKITO TESTS ----------------------------
 
    @Test
-    void addMockedMediaFileGood(){
+    void addMockedProducerFileGood(){
         UploaderImpl mockProducer = mock(UploaderImpl.class);
-        when(mockProducer.getName()).thenReturn("Anton");
+        String name = "Anton";
+        when(mockProducer.getName()).thenReturn(name);
 
         AdministrationImpl testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
 
         boolean expected = true;
-        boolean actual = testAdmin.addProducer(mockProducer.getName());
+        boolean actual = testAdmin.addProducer(name);
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void whenFileAddedCheckedWhetherProducerWithThisNameWasAlreadySavedBefore(){
-        UploaderImpl mockProducer = mock(UploaderImpl.class);
-        when(mockProducer.getName()).thenReturn("Anton");
-
-        AdministrationImpl testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
-        testAdmin.addProducer(mockProducer.getName());
-        testAdmin.addMedia("AudioVideo", "Anton", collection, BigDecimal.valueOf(50),
-                Duration.ofMinutes(5), "139 108");
-
-        verify(mockProducer,times(1)).getName();
-        verify(mockProducer,never()).getMediaCount();
-        verifyNoMoreInteractions(mockProducer);
-        assertTrue(mockProducer.mediaCount == 0);
     }
 
     @Test
@@ -598,6 +598,17 @@ class AdministrationImplTest {
         collection.add(Tutorial);
         testAdmin.addMedia("AudioVideo", "JZ", collection, BigDecimal.valueOf(50),
                 Duration.ofMinutes(5), "139 108");
+        verify(testObserver).aktualisiere();
+    }
+
+    @Test
+    void aktualisiere() {
+        AdministrationImpl testAdmin = new AdministrationImpl(BigDecimal.valueOf(100));
+        Observer testObserver = mock(SizeObserver.class);
+        testAdmin.meldeAn(testObserver);
+
+        testAdmin.benachrichtige();
+
         verify(testObserver).aktualisiere();
     }
 

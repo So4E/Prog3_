@@ -1,4 +1,4 @@
-package viewControl.EventLogicToGlListener;
+package viewControl.EventListenerToGl;
 
 import EventSystem.ToGL.EinfuegenUndLoeschenModus.DeleteMediaEvent;
 import EventSystem.ToGL.EinfuegenUndLoeschenModus.DeleteMediaEventListener;
