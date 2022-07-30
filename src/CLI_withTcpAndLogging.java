@@ -1,7 +1,7 @@
 import EventSystem.FromGL.*;
-import EventSystem.Observer_InversionOfControl.Observer;
-import EventSystem.Observer_InversionOfControl.SizeObserver;
-import EventSystem.Observer_InversionOfControl.TagObserver;
+import Observer_InversionOfControl.Observer;
+import Observer_InversionOfControl.SizeObserver;
+import Observer_InversionOfControl.TagObserver;
 import EventSystem.ToGL.AendernModus.ChangeMediaEventHandler;
 import EventSystem.ToGL.Anzeigenmodus.*;
 import EventSystem.ToGL.EinfuegenUndLoeschenModus.DeleteMediaEventHandler;
@@ -30,7 +30,7 @@ import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.net.Socket;
 
-public class CLI_withTCPClient {
+public class CLI_withTcpAndLogging {
 
     //arguments here can be TCP, UDP, capacity for admin, or nothing
     public static void main(String[] args) {
@@ -88,7 +88,7 @@ public class CLI_withTCPClient {
                 LoadWithJOSEventHandler loadWithJOSEventHandler = new LoadWithJOSEventHandler();
                 loadWithJOSEventHandler.add(clientStreamListener);
 
-                //TODO SaveWithJBP Handler & LoadWithJBP Handler
+                //TO DO SaveWithJBP Handler & LoadWithJBP Handler
 
                 ShowMediaListEventHandler showMediaListEventHandler = new ShowMediaListEventHandler();
                 showMediaListEventHandler.add(clientStreamListener);
@@ -138,14 +138,14 @@ public class CLI_withTCPClient {
                 loadingJOSEventHandler.add(loadingJOSListener);
                 clientStreamHandler.setLoadingJOSEventHandler(loadingJOSEventHandler);
 
-                //TODO ------------ Loading with JBP
+                //TO DO ------------ Loading with JBP
 
 
                 console.execute();
             }
 
             if (args[0].equals("UDP")) {
-                //TODO implement UDP Client
+                //TO DO implement UDP Client
             }
 
             if(args[0].equals("DE") || args[0].equals("EN")){
@@ -153,8 +153,8 @@ public class CLI_withTCPClient {
                 //check if additional capacity is given and use if it is there to initialize
                 int newCapacity = defaultCapacity.intValue();
                 try {
-                    newCapacity = Integer.parseInt(args[0]);
-                } catch (NumberFormatException e) {
+                    newCapacity = Integer.parseInt(args[1]);
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
                 defaultCapacity = new BigDecimal(newCapacity);
@@ -196,7 +196,7 @@ public class CLI_withTCPClient {
         DeleteMediaListener deleteMediaListener = new DeleteMediaListener(administration);
         ChangeMediaListener changeMediaListener = new ChangeMediaListener(administration);
         SaveWithJOSEventListener saveWithJOSListener = new SaveWithJOSListener(administration);
-        //TODO SaveWithJBPEventListener
+        //TO DO SaveWithJBPEventListener
 
         //One Way Handler -> Argument Listener
         ProducerEventHandler addProducerHandler = new ProducerEventHandler();
@@ -217,7 +217,7 @@ public class CLI_withTCPClient {
         SaveWithJOSEventHandler saveWithJOSEventHandler = new SaveWithJOSEventHandler();
         saveWithJOSEventHandler.add(saveWithJOSListener);
 
-        //TODO SaveWithJBP
+        //TO DO SaveWithJBP
 
         //EVENTS WITH ANSWER ----------------------------------------
         // EVENT -> Showing Media List -----------
@@ -264,7 +264,7 @@ public class CLI_withTCPClient {
         loadWithJOSEventHandler.add(loadWithJOSListener);
         //----------------ENDE JOS LADEN Config.
 
-        //Todo -> Loading with JBP
+        //TO DO -> Loading with JBP
 
         //console -> set handler for input handling
         console.setAddProducerHandler(addProducerHandler);
@@ -305,7 +305,7 @@ public class CLI_withTCPClient {
         DeleteMediaListener deleteMediaListener = new DeleteMediaListener(administration);
         ChangeMediaListener changeMediaListener = new ChangeMediaListener(administration);
         SaveWithJOSEventListener saveWithJOSListener = new SaveWithJOSListener(administration);
-        //TODO SaveWithJBPEventListener
+        //TO DO SaveWithJBPEventListener
 
         //One Way Handler -> Argument Listener
         ProducerEventHandler addProducerHandler = new ProducerEventHandler();
@@ -332,7 +332,7 @@ public class CLI_withTCPClient {
         saveWithJOSEventHandler.add(saveWithJOSListener);
         saveWithJOSEventHandler.add(logger);
 
-        //TODO SaveWithJBP
+        //TO DO SaveWithJBP
 
         //EVENTS WITH ANSWER ----------------------------------------
         // EVENT -> Showing Media List -----------
@@ -383,7 +383,7 @@ public class CLI_withTCPClient {
         loadWithJOSEventHandler.add(logger);
         //----------------ENDE JOS LADEN Config.
 
-        //Todo -> Loading with JBP
+        //TO DO -> Loading with JBP
 
         //console -> set handler for input handling
         console.setAddProducerHandler(addProducerHandler);

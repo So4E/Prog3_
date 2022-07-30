@@ -1,7 +1,7 @@
 package administration;
 
-import EventSystem.Observer_InversionOfControl.Observer;
-import EventSystem.Observer_InversionOfControl.SizeObserver;
+import Observer_InversionOfControl.Observer;
+import Observer_InversionOfControl.SizeObserver;
 import mediaDB.Tag;
 import mediaDB.Uploader;
 import org.junit.jupiter.api.Test;

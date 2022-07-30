@@ -3,10 +3,11 @@ Anmerkungen zur Nutzung der Anwendung
 
 Hinweis zur Implementierung des Persistenzmodus:
 - beim Speichern im GUI überschreibt man den Speicher des CLI und umgekehrt -> man kann also über beide
-Zugänge an einer Datenbank arbeiten
+Zugänge an einer Datenbank arbeiten (mit JOS)
+
+Hinweis zu KommandozeilenArgumenten:
 - Eingabe der Argumente in der Runtime Config: erstes Argument TCP, UDP o.ä, zweites Argument Kapazität
     -> falls nur Kapazität dann diese als einziges Argument übergeben
-    -> falls kein Argument: default wird als Kapazität gesetzt
 
 
 
@@ -16,20 +17,3 @@ Ressource Bundles: https://www.java-blog-buch.de/d-mehrsprachigkeit-mit-bundles-
 Anzeige der Werte in der GUI Tabelle: https://docs.oracle.com/javase/8/javafx/api/javafx/collections/ObservableList.html
 Angeklickte Objekte (GUI) nutzen: https://jenkov.com/tutorials/javafx/tableview.html#:~:text=It%20is%20possible%20to%20select,the%20select(int)%20method.
 JBP: NonBeanItem Big Decimal und Date: http://www.java2s.com/example/java-api/java/beans/xmlencoder/setpersistencedelegate-2-0.html
-
-
-
-
-________ALTE ANMERKUNGEN________
-
-#Abgabe Übung 3:
-
-Simulation 1 ist realisiert -> Name, Größe variieren
-
-Simulation 2:
-- increase Thread angelegt
-- increase observer -> passt? oder muss genauer abgeglichen werden ob an den access counts etwas
-                    geändert wurde?
-
-- modified delete thread -> darf dieser und noch zu implementierender ModifiedAddThread je auch das
-    interface Observer implementieren, sodass sich beide gegenseitig benachrichtigen, wenn sie fertig sind?

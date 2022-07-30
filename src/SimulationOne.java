@@ -1,6 +1,6 @@
-import EventSystem.Observer_InversionOfControl.Observer;
-import EventSystem.Observer_InversionOfControl.SizeObserver;
-import EventSystem.Observer_InversionOfControl.TagObserver;
+import Observer_InversionOfControl.Observer;
+import Observer_InversionOfControl.SizeObserver;
+import Observer_InversionOfControl.TagObserver;
 import Simulations.SimObserver.AddOrDeleteObserverImpl;
 import Simulations.SimulationOne.AddThread;
 import Simulations.SimulationOne.DeleteThread;
@@ -9,7 +9,6 @@ import administration.AdministrationImpl;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.LinkedList;
-import java.util.Scanner;
 
 /*
 Simulation
@@ -30,22 +29,19 @@ Erstellen Sie einen weiteren thread der kontinuierlich die Liste der enthaltenen
 daraus zufällig eine auswählt und löscht. Diese Simulation sollte nicht terminieren und nicht
 synchronisiert arbeiten.
  */
-public class SimulationOneMain {
+public class SimulationOne {
 
     public static void main(String[] args) {
-        int capacity = -1;
-
-        //get capacity from user
-        System.out.println("Please enter capacity for database: ");
-        do {
-            Scanner s = new Scanner(System.in);
-            String input = s.next();
-            try {
-                capacity = Integer.parseInt(input);
-            } catch (NumberFormatException n) {
-                System.out.println("No correct input. Please try again to enter a number bigger or equal to 0.");
-            }
-        } while (capacity == -1);
+        int capacity = 100;
+        int newCapacity = capacity;
+        try {
+            //try to parse input to an int
+            newCapacity = Integer.parseInt(args[0]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+        //any way initialize cli with default or set capacity
+        capacity = newCapacity;
 
         //create admin and prepare for thread test
         AdministrationImpl newAdmin = new AdministrationImpl(BigDecimal.valueOf(capacity));

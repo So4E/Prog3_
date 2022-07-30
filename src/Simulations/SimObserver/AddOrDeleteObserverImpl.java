@@ -3,7 +3,7 @@ package Simulations.SimObserver;
 
 import administration.AdministrationImpl;
 import administration.AllUploadables;
-import EventSystem.Observer_InversionOfControl.Observer;
+import Observer_InversionOfControl.Observer;
 
 import java.util.LinkedList;
 
@@ -22,7 +22,7 @@ public class AddOrDeleteObserverImpl implements Observer {
         LinkedList<AllUploadables> oldList = this.mediaList;
         LinkedList<AllUploadables> newList = observableAdmin.getMediaList();
         if(oldList.equals(newList)){
-            System.out.println("No changes made.");
+            System.out.println("No changes at MediaList made.");
             return;
         }
         else {

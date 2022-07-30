@@ -1,4 +1,4 @@
-package EventSystem.Observer_InversionOfControl;
+package Observer_InversionOfControl;
 
 import administration.AdministrationImpl;
 

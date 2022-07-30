@@ -1,7 +1,7 @@
 package administration;
 
-import EventSystem.Observer_InversionOfControl.Observer;
-import EventSystem.Observer_InversionOfControl.SubjectForSizeObserver;
+import Observer_InversionOfControl.Observer;
+import Observer_InversionOfControl.SubjectForSizeObserver;
 import mediaDB.*;
 
 import java.io.Serializable;
@@ -11,14 +11,12 @@ import java.time.Duration;
 import java.util.*;
 
 public class AdministrationImpl implements Administration, SubjectForSizeObserver, Serializable {
-    private LinkedList<AllUploadables> mediaList = new LinkedList<AllUploadables>();
+    private LinkedList<AllUploadables> mediaList = new LinkedList<>();
     private BigDecimal maxSizeOfMemory = BigDecimal.valueOf(0);
     private BigDecimal totalSize = BigDecimal.valueOf(0);
-    private LinkedList<UploaderSuper> producerList = new LinkedList<UploaderSuper>();  //list of producers is case sensitive
-    private Map<Tag, Integer> tagMap = new HashMap<Tag, Integer>();
+    private LinkedList<UploaderSuper> producerList = new LinkedList<>();  //list of producers is case-sensitive
+    private Map<Tag, Integer> tagMap = new HashMap<>();
     private transient List<Observer> observerList;
-    //TODO - needed for JBP - delete in case jbp is not implemented completely
-    //static final long serialVersionUID = 1L;
 
     public AdministrationImpl(BigDecimal capacity) {
         //check if input BigDecimal is of a required minimum size for the memory, otherwise throw exception
@@ -33,22 +31,12 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
         }
     }
 
-    //TODO - delete if jbp not completely implemented constructor for JBP
-    /*public AdministrationImpl(BigDecimal capacity, LinkedList<UploaderSuper> uploaderlist, HashMap<Tag, Integer> tagMap,
-                              LinkedList<AllUploadables> mediaList, BigDecimal totalSize) {
-        this.maxSizeOfMemory = capacity;
-        this.producerList = uploaderlist;
-        this.tagMap = tagMap;
-        this.mediaList = mediaList;
-        this.totalSize = totalSize;
-    }*/
-
     ////////////////////////////////////////////////////////////////////////////////////
     //--------------------Producer Methods ---------------------------------------------------
     @Override
     public synchronized boolean addProducer(String name) {
         //check if producer is already in list - return false if listed
-        if (checkIfProducerIsListed(name) == true) return false;
+        if (checkIfProducerIsListed(name)) return false;
         //if producer is not in list add him to list and map
         UploaderSuper newProducer = new UploaderImpl(name);
         producerList.add(newProducer);
@@ -69,7 +57,7 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
     @Override
     public synchronized boolean deleteProducer(String name) {
         //check if producer is in list - return false if not
-        if (checkIfProducerIsListed(name) == false) return false;
+        if (!checkIfProducerIsListed(name)) return false;
             //if listed - delete producer and associated media objects
         else {
             for (int i = 0; i < mediaList.size(); i++) {
@@ -213,11 +201,10 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
     public synchronized boolean deleteMedia(String address) {
         //find object with input address and delete it
         for (int i = 0; i < mediaList.size(); i++) {
-            Content object = mediaList.get(i);
-            if (object.getAddress().equals(address)) {           //object to be deletedfound
+            AllUploadables object = mediaList.get(i);
+            if (object.getAddress().equals(address)) {         //object to be deleted found
                 //---- get Uploader of this object
-                Uploadable thisObject = (Uploadable) object;
-                String uploaderName = thisObject.getUploader().getName();
+                String uploaderName = object.getUploader().getName();
                 //---- and decrease MediaCounter
                 int index = getIndexOfProducer(uploaderName);
                 if (index >= 0) {
@@ -227,13 +214,12 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
                 }
 
                 //get size of object and decrease used storage space
-                MediaContent thatObject = (MediaContent) object;
-                BigDecimal size = thatObject.getSize();
+                BigDecimal size = object.getSize();
                 BigDecimal oldSize = totalSize;
                 totalSize = new BigDecimal(oldSize.doubleValue() - size.doubleValue());
 
                 //count minus one in Map of used Tags for all Tags of this mediaFile
-                Collection<Tag> tags = thatObject.getTags();
+                Collection<Tag> tags = object.getTags();
                 if (!tags.isEmpty()) {
                     for (Tag c : Tag.values()) {
                         //if tag is saved in object reduce count by 1
@@ -245,7 +231,6 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
                         }
                     }
                 }
-
                 //delete item
                 mediaList.remove(i);
                 benachrichtige();
@@ -258,7 +243,7 @@ public class AdministrationImpl implements Administration, SubjectForSizeObserve
 
     @Override
     public synchronized Map<Tag, Integer> getTagMap() {
-        return new HashMap<Tag, Integer>(this.tagMap);
+        return new HashMap<>(this.tagMap);
     }
 
     @Override

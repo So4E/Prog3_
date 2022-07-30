@@ -261,7 +261,6 @@ public class ConsoleCLI extends HandlerConfigSuperclassToGLAndBack {
                                 break;
                             }
 
-                            //TODO persist fertig implementieren
                             if (input.equals("saveJBP")) {
                                 System.out.println("Service currently not available.");
                                 break;
