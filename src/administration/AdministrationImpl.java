@@ -1,7 +1,7 @@
 package administration;
 
-import Observer_InversionOfControl.Observer;
-import Observer_InversionOfControl.SubjectForSizeObserver;
+import observer_InversionOfControl.Observer;
+import observer_InversionOfControl.SubjectForSizeObserver;
 import mediaDB.*;
 
 import java.io.Serializable;
