@@ -572,9 +572,6 @@ class AdministrationImplTest {
         assertEquals(expectedTags, actuallyReturnedNotUsedTags);
     }
 
-    /////////////////////////////////////////////////////////////////////////////
-    //---------------------MOCKITO TESTS ----------------------------
-
    @Test
     void addMockedProducerFileGood(){
         UploaderImpl mockProducer = mock(UploaderImpl.class);

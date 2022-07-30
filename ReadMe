@@ -4,6 +4,9 @@ Anmerkungen zur Nutzung der Anwendung
 Hinweis zur Implementierung des Persistenzmodus:
 - beim Speichern im GUI überschreibt man den Speicher des CLI und umgekehrt -> man kann also über beide
 Zugänge an einer Datenbank arbeiten
+- Eingabe der Argumente in der Runtime Config: erstes Argument TCP, UDP o.ä, zweites Argument Kapazität
+    -> falls nur Kapazität dann diese als einziges Argument übergeben
+    -> falls kein Argument: default wird als Kapazität gesetzt
 
 
 
