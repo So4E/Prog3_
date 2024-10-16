@@ -1,10 +1,14 @@
-komplette Geschäftslogik implementiert (für AudioVideo). Gelöst ohne abstrakte Klasse -> okay?
--> Testabdeckung ungenügend, richtig?
+#university project for programming 3 course
+implementing a basic file storage system usable through UI as well as console input to learn how to use basic patterns like event system, listeners etc. 
+
+
+
+
+Remaining notes for the teacher:
 
 Abgabe Übung 3:
 
 Simulation 1 ist realisiert -> Name, Größe variieren
-
 
 
 Abgabe Übung 2: Anmerkungen:
